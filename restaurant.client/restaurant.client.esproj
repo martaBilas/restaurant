@@ -11,5 +11,7 @@
   <ItemGroup>
     <Folder Include="src\MealCatalog\Components\" />
     <Folder Include="src\MealCatalog\Pages\" />
+    <Folder Include="src\Layout\" />
+    <Folder Include="src\User\Components\" />
   </ItemGroup>
 </Project>
