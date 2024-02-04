@@ -2,11 +2,10 @@ import './App.css'
 import { createBrowserRouter } from 'react-router-dom'
 import { RouterProvider } from 'react-router'
 
-import Routers from './routes/Routers.jsx';
 import Layout from './Layout/Layout';
 import SignIn from './User/Pages/SignIn.jsx';
 import SignUp from "./User/Pages/SingUp.jsx";
-import MealCatalog from "./MealCatalog/Pages/MealCatalog.jsx";
+import Home from './Meal/Pages/Home.jsx';
 
 const router = createBrowserRouter([
   {
@@ -14,8 +13,8 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: '/home',
-        element: <MealCatalog />,
+        path: '/',
+        element: <Home />,
       },
       {
         path: '/signIn',
