@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState } from "react";
 import { RiMenuLine } from "@remixicon/react";
@@ -28,7 +29,7 @@ const Header = () => {
         </nav>
       </SideDrawer>
 
-      <header id="header" class="fixed-top d-flex align-items-center">
+      <header id="header" class=" d-flex align-items-center">
         <div className="container d-flex align-items-center">
           <button
             className="main-navigation__menu-btn display-mobile"
@@ -37,9 +38,9 @@ const Header = () => {
             <RiMenuLine className="mobile-nav-toggle" />
           </button>
 
-          <h2 className="logo me-auto">
-            <a href="">Logo</a>
-          </h2>
+          <Link className="logo me-auto" to="/home">
+            Logo
+          </Link>
 
           <nav className="navbar">
             <HeaderNavLinks />

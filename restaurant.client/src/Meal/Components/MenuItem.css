@@ -1,0 +1,15 @@
+.menuItem_img{
+    border-radius: 10px;
+}
+.menuItem_card{
+    border-radius: 16px;
+}
+.menuItem_price{
+    color: rgb(19, 81, 53);
+}
+.menuItem_input{
+    height: 40px; 
+    width: 40px;
+    font-size: 18px;
+    border-radius: 12px;
+}

@@ -9,7 +9,7 @@ const HeaderNavLinks = () => {
   return (
     <ul>
       <li>
-        <NavLink to="/menu">
+        <NavLink to="/">
           Menu
         </NavLink>
       </li>
