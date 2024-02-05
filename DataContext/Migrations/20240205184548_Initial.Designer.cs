@@ -4,6 +4,7 @@ using DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataContext.Migrations
 {
     [DbContext(typeof(RestaurantDataContext))]
-    partial class RestaurantDataContextModelSnapshot : ModelSnapshot
+    [Migration("20240205184548_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace DataContext.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AppRoleAppUser", b =>
-                {
-                    b.Property<long>("AppUsersId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("UserRolesId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("AppUsersId", "UserRolesId");
-
-                    b.HasIndex("UserRolesId");
-
-                    b.ToTable("AppRoleAppUser");
-                });
 
             modelBuilder.Entity("Domain.Customer", b =>
                 {
@@ -200,9 +188,6 @@ namespace DataContext.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<double>("Weight")
-                        .HasColumnType("float");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -217,10 +202,6 @@ namespace DataContext.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -392,21 +373,6 @@ namespace DataContext.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("AppRoleAppUser", b =>
-                {
-                    b.HasOne("Domain.Idenity.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("AppUsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Idenity.AppRole", null)
-                        .WithMany()
-                        .HasForeignKey("UserRolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Meal", b =>

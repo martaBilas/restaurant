@@ -4,5 +4,5 @@ namespace Domain.Idenity;
 
 public class AppRole : IdentityRole<long>
 {
-    public ICollection<AppUser> AppUsers { get; set; }
+    public virtual ICollection<AppUser> AppUsers { get; set; }
 }

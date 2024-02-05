@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataContext.Migrations
 {
     [DbContext(typeof(RestaurantDataContext))]
-    [Migration("20240116202336_Initial")]
-    partial class Initial
+    [Migration("20240205185851_Initial-fix")]
+    partial class Initialfix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,19 +25,19 @@ namespace DataContext.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AspNetUserRoles", b =>
+            modelBuilder.Entity("AppRoleAppUser", b =>
                 {
-                    b.Property<long>("RoleId")
+                    b.Property<long>("AppUsersId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("UserId")
+                    b.Property<long>("UserRolesId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("RoleId", "UserId");
+                    b.HasKey("AppUsersId", "UserRolesId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserRolesId");
 
-                    b.ToTable("AspNetUserRoles", "dbo");
+                    b.ToTable("AppRoleAppUser");
                 });
 
             modelBuilder.Entity("Domain.Customer", b =>
@@ -86,8 +86,8 @@ namespace DataContext.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
@@ -100,7 +100,7 @@ namespace DataContext.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AppRoles", "dbo");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Idenity.AppUser", b =>
@@ -119,8 +119,8 @@ namespace DataContext.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -138,12 +138,12 @@ namespace DataContext.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -161,8 +161,8 @@ namespace DataContext.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
@@ -174,7 +174,7 @@ namespace DataContext.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AppUsers", "dbo");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Meal", b =>
@@ -185,7 +185,7 @@ namespace DataContext.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("Category")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -205,7 +205,27 @@ namespace DataContext.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Meals");
+                });
+
+            modelBuilder.Entity("Domain.MealCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MealCategories");
                 });
 
             modelBuilder.Entity("Domain.Order", b =>
@@ -370,19 +390,30 @@ namespace DataContext.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AspNetUserRoles", b =>
+            modelBuilder.Entity("AppRoleAppUser", b =>
                 {
-                    b.HasOne("Domain.Idenity.AppRole", null)
+                    b.HasOne("Domain.Idenity.AppUser", null)
                         .WithMany()
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("AppUsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Idenity.AppUser", null)
+                    b.HasOne("Domain.Idenity.AppRole", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserRolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Meal", b =>
+                {
+                    b.HasOne("Domain.MealCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Domain.Order", b =>
