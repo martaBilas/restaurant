@@ -6,6 +6,7 @@ import Layout from './Layout/Layout';
 import SignIn from './User/Pages/SignIn.jsx';
 import SignUp from "./User/Pages/SingUp.jsx";
 import Home from './Meal/Pages/Home.jsx';
+import FileUpload from './ImportMeals/FileUpload.jsx';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
         path: '/signUp',
         element: <SignUp />,
       },
+      {
+        path: '/uploadMeals',
+        element: <FileUpload/>
+      }
     ],
   },
 ])
