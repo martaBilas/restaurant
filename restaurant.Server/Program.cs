@@ -36,6 +36,7 @@ builder.Services.AddDbContext<RestaurantDataContext>(options =>
 
 builder.Services.AddScoped<ICatalogService, CatalogService>();
 builder.Services.AddScoped<IMealImportService, MealImportService>();
+builder.Services.AddScoped<IMealService, MealService>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(opt =>
 {
