@@ -37,11 +37,9 @@ const Header = () => {
           >
             <RiMenuLine className="mobile-nav-toggle" />
           </button>
-
           <Link className="logo me-auto" to="/home">
             Logo
           </Link>
-
           <nav className="navbar">
             <HeaderNavLinks />
           </nav>

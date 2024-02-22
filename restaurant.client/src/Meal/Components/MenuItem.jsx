@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Card, Col, Container, Row } from "react-bootstrap";
-import { RiShoppingBasketLine } from "@remixicon/react";
+import MealCard from "../../UIElements/MealCard";
+import { Modal } from "react-bootstrap";
 
 import "./MenuItem.css";
 import "../../styles.css";
+
 const MenuItem = (props) => {
   const [quantity, setQuantity] = useState(1);
 
@@ -17,65 +18,39 @@ const MenuItem = (props) => {
     }
   };
 
+  const [cardIsOpen, setCardIsOpen] = useState(false);
+  const openCardHandler = () => setCardIsOpen(true);
+  const closeCardHandler = () => setCardIsOpen(false);
+
   return (
-    <div>
-      <Card className="menuItem_card p-4">
-        <div>
-          <Card.Img className="menuItem_img" src={props.imageUrl} alt="" />
-        </div>
-        <Card.Title className="pt-3">{props.name}</Card.Title>
-        <Row className="pt-2">
-          <Col
-            md="4"
-            className="d-flex justify-content-center align-items-center fs-4 menuItem_price"
-          >
-            {props.price} ₴
-          </Col>
-          <Col
-            md="2"
-            className="d-flex justify-content-center align-items-center"
-          >
-            <button
-              className="fs-4 transparent_button"
-              onClick={handleDecrease}
-            >
-              <i className="fa-solid fa-minus"></i>
-            </button>
-          </Col>
-          <Col
-            md="2"
-            className="d-flex justify-content-center align-items-center"
-          >
-            <input
-              type="text"
-              className="menuItem_input text-center"
-              value={quantity}
-              readOnly
-            />
-          </Col>
-          <Col
-            md="2"
-            className="d-flex justify-content-center align-items-center"
-          >
-            <button
-              className="fs-4 transparent_button"
-              onClick={handleIncrease}
-            >
-              <i className="fa-solid fa-plus"></i>
-            </button>
-          </Col>
-          <Col
-            md="2"
-            className="d-flex justify-content-center align-items-center"
-          >
-            <button
-              className="fs-4 transparent_button">
-              <i className="fa-solid fa-basket-shopping"></i>
-            </button>
-          </Col>
-        </Row>
-      </Card>
-    </div>
+    <React.Fragment>
+      <MealCard
+        imageUrl={props.imageUrl}
+        name={props.name}
+        price={props.price}
+        handleDecrease={handleDecrease}
+        handleIncrease={handleIncrease}
+        quantity={quantity}
+        openCardHandler={openCardHandler}
+      />
+
+      <Modal show={cardIsOpen} onHide={closeCardHandler} centered >
+        <Modal.Body className="p-0">
+          <MealCard
+            show={cardIsOpen}
+            imageUrl={props.imageUrl}
+            name={props.name}
+            description={props.description}
+            price={props.price}
+            handleDecrease={handleDecrease}
+            handleIncrease={handleIncrease}
+            quantity={quantity}
+            openCardHandler={openCardHandler}
+            closeCardHandler={closeCardHandler}
+          />
+        </Modal.Body>
+      </Modal>
+    </React.Fragment>
   );
 };
 
