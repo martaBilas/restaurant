@@ -5,8 +5,8 @@ import { RouterProvider } from 'react-router'
 import Layout from './Layout/Layout';
 import SignIn from './User/Pages/SignIn.jsx';
 import SignUp from "./User/Pages/SingUp.jsx";
-import Home from './Meal/Pages/Home.jsx';
-import FileUpload from './ImportMeals/FileUpload.jsx';
+import Home from './Pages/Home.jsx';
+import Cart from './Pages/Cart.jsx';
 
 const router = createBrowserRouter([
   {
@@ -26,8 +26,8 @@ const router = createBrowserRouter([
         element: <SignUp />,
       },
       {
-        path: '/uploadMeals',
-        element: <FileUpload/>
+        path: '/cart',
+        element: <Cart/>
       }
     ],
   },
