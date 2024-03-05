@@ -15,9 +15,9 @@ const Cart = (props) => {
   const renderComponent = () => {
     switch (currentComponent) {
       case 1:
-        return <Order />;
+        return <Order handleNextButtonClick={handleNextButtonClick}/>;
       case 2:
-        return <OrderDetailsForm />;
+        return <OrderDetailsForm handleNextButtonClick={handleNextButtonClick}/>;
       case 3:
         return <ConfirmedOrder />;
       default:
@@ -29,13 +29,20 @@ const Cart = (props) => {
     setCurrentComponent(currentComponent + 1);
   };
 
- const renderHeader = () => {
+  const handleBackButtonClick = () => {
+    setCurrentComponent(1);
+  };
+
+  const renderHeader = () => {
     switch (currentComponent) {
       case 1:
         return <Offcanvas.Title className="fs-3">Cart</Offcanvas.Title>;
       case 2:
         return (
-          <button className="transparent_button fs-5" onClick={handleBackButtonClick}>
+          <button
+            className="transparent_button fs-5"
+            onClick={handleBackButtonClick}
+          >
             <i class="fa-solid fa-chevron-left"></i> back
           </button>
         );
@@ -43,10 +50,6 @@ const Cart = (props) => {
         return null;
     }
   };
-
-  const handleBackButtonClick=()=>{
-    setCurrentComponent(1)
-  }
 
   return (
     <React.Fragment>
@@ -61,7 +64,7 @@ const Cart = (props) => {
           {renderHeader()}
         </Offcanvas.Header>
         <Offcanvas.Body>{renderComponent()}</Offcanvas.Body>
-        <Row className="px-4 pb-3">
+        {/* <Row className="px-4 pb-3">
           <Col className="d-flex justify-content-end">
             {currentComponent !== 3 && (
               <Button
@@ -73,7 +76,7 @@ const Cart = (props) => {
               </Button>
             )}
           </Col>
-        </Row>
+        </Row> */}
       </Offcanvas>
 
       {/* {isMobile && (

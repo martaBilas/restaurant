@@ -1,7 +1,19 @@
 import React from "react";
 import { Row, Col, Button, Form, FloatingLabel } from "react-bootstrap";
+import { useState } from "react";
 
-const OrderDetailsForm = () => {
+const OrderDetailsForm = (props) => {
+  const [validated, setValidated] = useState(false);
+
+  const handleSubmit = (event) => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    setValidated(true);
+  };
   return (
     <>
       <p className="fs-4 pt-0">Confirm order:</p>
@@ -11,16 +23,21 @@ const OrderDetailsForm = () => {
           (log in)
         </a>
       </div>
-      <Form>
+      <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row className="pt-3">
           <Col>
             <FloatingLabel controlId="floatingName" label="name">
-              <Form.Control className="custom-input" placeholder="name" />
+              <Form.Control
+                required
+                className="custom-input"
+                placeholder="name"
+              />
             </FloatingLabel>
           </Col>
           <Col>
             <FloatingLabel controlId="floatingSurname" label="surname">
               <Form.Control
+                required
                 className="custom-input"
                 type="text"
                 placeholder="surname"
@@ -31,7 +48,11 @@ const OrderDetailsForm = () => {
         <Row className="pt-2">
           <Col>
             <FloatingLabel label="adress">
-              <Form.Control className="custom-input" placeholder="adress" />
+              <Form.Control
+                required
+                className="custom-input"
+                placeholder="adress"
+              />
             </FloatingLabel>
           </Col>
           <Col>
@@ -68,6 +89,13 @@ const OrderDetailsForm = () => {
               placeholder="Comment to your order"
               rows={5}
             />
+          </Col>
+        </Row>
+        <Row className=" mt-5 pt-5">
+          <Col className="d-flex justify-content-end">
+            <Button className="cartNext-but" size="md" onClick={props.handleNextButtonClick}>
+              Submit
+            </Button>
           </Col>
         </Row>
       </Form>
