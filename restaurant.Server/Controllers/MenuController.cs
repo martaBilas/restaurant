@@ -11,19 +11,18 @@ namespace restaurant.Server.Controllers;
 
 public class MenuController : ControllerBase
 {
-    private readonly ICatalogService _catalogService;
-    private readonly IMealService _mealService;
+    private readonly IMenuService _menuService;
 
-    public MenuController(ICatalogService catalogService, IMealService mealService)
+    public MenuController( IMenuService mealService)
     {
-        _catalogService = catalogService;
-        _mealService = mealService;
+        
+        _menuService = mealService;
     }
 
     [HttpGet("GetCategories")]
     public IActionResult GetCategories()
     {
-        IList<CategoryItemModel> categories = _catalogService.GetCategories();
+        IList<CategoryItemModel> categories = _menuService.GetCategories();
 
         if (categories == null)
             return NotFound();
@@ -34,12 +33,12 @@ public class MenuController : ControllerBase
     [HttpGet("GetMeals")]
     public IActionResult GetMeals(int categoryId)
     {
-        return Ok(_mealService.GetMeals(categoryId));
+        return Ok(_menuService.GetMeals(categoryId));
     }
 
     [HttpGet("getMealById")]
     public IActionResult GetMealById(int id)
     {
-        return Ok(_mealService.GetMealById(id));
+        return Ok(_menuService.GetMealById(id));
     }
 }
