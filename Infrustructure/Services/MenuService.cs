@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
 
-public class MealService : IMealService
+public class MenuService : IMenuService
 {
     public readonly RestaurantDataContext _db;
-    public MealService(RestaurantDataContext db)
+    public MenuService(RestaurantDataContext db)
     { _db = db; }
 
     public IList<MealModel> GetMeals(int categoryId)
@@ -53,6 +53,21 @@ public class MealService : IMealService
             ImageUrl = meal.ImageUrl,
             Description = meal.Description
         };
+    }
+
+    public IList<CategoryItemModel> GetCategories()
+    {
+        IList<CategoryItemModel> categories = _db.MealCategories
+                .Select(category => new CategoryItemModel
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    ImageUrl = category.ImageUrl
+                })
+                .ToList();
+
+
+        return categories;
     }
 
 }

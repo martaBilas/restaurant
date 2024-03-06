@@ -34,9 +34,8 @@ builder.Services.AddDbContext<RestaurantDataContext>(options =>
             options.UseSqlServer(connectionString)
             , ServiceLifetime.Scoped);
 
-builder.Services.AddScoped<ICatalogService, CatalogService>();
 builder.Services.AddScoped<IMealImportService, MealImportService>();
-builder.Services.AddScoped<IMealService, MealService>();
+builder.Services.AddScoped<IMenuService, MenuService>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(opt =>
 {
