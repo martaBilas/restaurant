@@ -3,6 +3,7 @@ using Domain.Idenity;
 using Infrastructure.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,6 +37,8 @@ builder.Services.AddDbContext<RestaurantDataContext>(options =>
 
 builder.Services.AddScoped<IMealImportService, MealImportService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<IOrderService,OrderService>();
+builder.Services.AddScoped<IAnonCustomerService,AnonCustomerService>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(opt =>
 {
@@ -74,7 +77,8 @@ if (app.Environment.IsDevelopment())
 app.UseForwardedHeaders();
 app.UseCookiePolicy(new CookiePolicyOptions
 {
-    Secure = CookieSecurePolicy.Always,
+    MinimumSameSitePolicy = SameSiteMode.None, // Set SameSite to None
+    Secure = CookieSecurePolicy.Always, // Set Secure to Always
 });
 
 

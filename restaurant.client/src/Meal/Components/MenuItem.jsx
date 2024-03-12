@@ -25,6 +25,7 @@ const MenuItem = (props) => {
   return (
     <React.Fragment>
       <MealCard
+        id={props.id}
         imageUrl={props.imageUrl}
         name={props.name}
         price={props.price}
@@ -34,9 +35,10 @@ const MenuItem = (props) => {
         openCardHandler={openCardHandler}
       />
 
-      <Modal show={cardIsOpen} onHide={closeCardHandler} centered >
+      <Modal show={cardIsOpen} onHide={closeCardHandler} centered>
         <Modal.Body className="p-0">
           <MealCard
+            id={props.id}
             show={cardIsOpen}
             imageUrl={props.imageUrl}
             name={props.name}

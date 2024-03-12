@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Modal from "react-bootstrap/Modal";
 import { Row, Col, Button, ModalBody } from "react-bootstrap";
@@ -7,17 +7,39 @@ import "./Cart.css";
 import OrderDetailsForm from "../Cart/OrderDetailsForm";
 import Order from "../Cart/Order";
 import ConfirmedOrder from "../Cart/ConfirmedOrder";
+import { fetchOrder } from "../ApiCall";
 
 const Cart = (props) => {
   const isMobile = window.innerWidth <= 768;
   const [currentComponent, setCurrentComponent] = useState(1);
+  const [orderData, setOrderData] = useState(null);
+
+  useEffect(() => {
+    const getOrderData = async () => {
+      try {
+        const data = await fetchOrder();
+        setOrderData(data);
+        
+      } catch (error) {
+        console.error("Error fetching order data: ", error);
+      }
+    };
+    getOrderData();
+  }, []);
 
   const renderComponent = () => {
     switch (currentComponent) {
       case 1:
-        return <Order handleNextButtonClick={handleNextButtonClick}/>;
+        return (
+          <Order
+            orderData={orderData}
+            handleNextButtonClick={handleNextButtonClick}
+          />
+        );
       case 2:
-        return <OrderDetailsForm handleNextButtonClick={handleNextButtonClick}/>;
+        return (
+          <OrderDetailsForm handleNextButtonClick={handleNextButtonClick} />
+        );
       case 3:
         return <ConfirmedOrder />;
       default:
