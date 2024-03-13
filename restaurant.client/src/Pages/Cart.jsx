@@ -7,6 +7,7 @@ import "./Cart.css";
 import OrderDetailsForm from "../Cart/OrderDetailsForm";
 import Order from "../Cart/Order";
 import ConfirmedOrder from "../Cart/ConfirmedOrder";
+import EmptyCart from "../Cart/EmptyCart";
 import { fetchOrder } from "../ApiCall";
 
 const Cart = (props) => {
@@ -19,7 +20,6 @@ const Cart = (props) => {
       try {
         const data = await fetchOrder();
         setOrderData(data);
-        
       } catch (error) {
         console.error("Error fetching order data: ", error);
       }
@@ -28,6 +28,9 @@ const Cart = (props) => {
   }, []);
 
   const renderComponent = () => {
+    if (!orderData) {
+      return <EmptyCart />;
+    }
     switch (currentComponent) {
       case 1:
         return (

@@ -7,4 +7,5 @@ public interface IOrderService
 {
     void AddOrUpdateOrder(Guid anonId, int mealId, int amount);
     public OrderModel GetOrder(Guid? anonId);
+    object UptadeAmount(Guid anonId, int rowId, bool increment);
 }

@@ -36,5 +36,21 @@ namespace restaurant.Server.Controllers
             var model = _orderService.GetOrder(anonId);
             return Ok(model);
         }
+
+        [HttpPut("DecrementAmount")]
+        public IActionResult DecrementAmount([FromBody] int rowId)
+        {
+            var anonId = _anonCustomerService.GetAnonCustomer();
+            var data = _orderService.UptadeAmount(anonId.Value, rowId, false);
+            return Ok(data);
+        }
+
+        [HttpPut("IncrementAmount")]
+        public IActionResult IncrementAmount([FromBody] int rowId)
+        {
+            var anonId = _anonCustomerService.GetAnonCustomer();
+            var data = _orderService.UptadeAmount(anonId.Value, rowId, true);
+            return Ok(data);
+        }
     }
 }

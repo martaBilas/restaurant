@@ -87,4 +87,31 @@ public class OrderService : IOrderService
         };
         return orderModel;
     }
+    public object UptadeAmount(Guid anonId, int rowId, bool increment)
+    {
+        var orderRow = _db.Orders
+            .Include(o => o.OrderRows)
+            .OrderBy(e => e.Id)
+            .LastOrDefault(o => o.AnonId == anonId && o.IsPaid == false)?
+            .OrderRows?
+            .FirstOrDefault(o => o.Id == rowId);
+
+        if (orderRow == null)
+            return null;
+
+        if (increment)
+            orderRow.Amount += 1;
+        else if (orderRow.Amount > 1)
+            orderRow.Amount -= 1;
+
+        _db.SaveChanges();
+
+        var order = _db.Orders
+            .Include(o => o.OrderRows)
+            .OrderBy(e => e.Id)
+            .LastOrDefault(o => o.AnonId == anonId && o.IsPaid == false);
+
+        var data = new { Amount = orderRow.Amount, Sum = orderRow.Total, Total = order?.Total };
+        return data;
+    }
 }

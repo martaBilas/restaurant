@@ -42,11 +42,44 @@ export const addMealToCart = async (addModel) => {
 export const fetchOrder = async () => {
   try {
     const response = await axios.get(`${BASE_URL}Order/GetOrder`, {
-      withCredentials: true});
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     console.error(
       "There was an error with the fetch order operation: " + error.message
+    );
+  }
+};
+
+export const decrementMealAmount = async (rowId) => {
+  try {
+    const response = await axios.put(`${BASE_URL}Order/DecrementAmount`, rowId, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "here was an error with the fetch decrement meal amount operation: " + error.message
+    );
+  }
+};
+
+export const incrementMealAmount = async (rowId) => {
+  try {
+    const response = await axios.put(`${BASE_URL}Order/IncrementAmount`, rowId, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "here was an error with the fetch increment meal amount operation: " + error.message
     );
   }
 };
