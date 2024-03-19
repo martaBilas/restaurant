@@ -1,5 +1,7 @@
 import axios from "axios";
 
+axios.defaults.withCredentials = true;
+
 const BASE_URL = "https://localhost:7135/api/";
 
 export const fetchMeals = async (itemId) => {
@@ -83,3 +85,21 @@ export const incrementMealAmount = async (rowId) => {
     );
   }
 };
+
+export const deleteMealFromOrder = async (rowId) => {
+
+  axios.delete(`${BASE_URL}Order/deleteOrderRow`, {
+    data: JSON.stringify(rowId),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    withCredentials: true,
+  })
+  .then((response) => {
+    console.log(response.data);
+  })
+  .catch((error) => {
+    console.error("Error deleting meal:", error);
+  });
+}
+

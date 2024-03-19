@@ -2,31 +2,35 @@ import { React, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import "./CartItem.css";
 
-import { incrementMealAmount, decrementMealAmount } from "../ApiCall";
+import {
+  incrementMealAmount,
+  decrementMealAmount,
+  deleteMealFromOrder,
+} from "../ApiCall";
 
 const CartItem = (props) => {
-  const [quantity, setQuantity] = useState(props?.amount||0);
+  const [quantity, setQuantity] = useState(props?.amount || 0);
 
   const handleIncrease = async () => {
     try {
       const data = await incrementMealAmount(props.id);
-        setQuantity(data.amount);
-        props.handleTotalUptade(data.total); 
+      setQuantity(data.amount);
+      props.handleTotalUptade(data.total);
     } catch (error) {
       console.error("Error in handleIncrease: ", error);
     }
   };
-  
 
   const handleDecrease = async () => {
     try {
       const data = await decrementMealAmount(props.id);
-        setQuantity(data.amount);
-        props.handleTotalUptade(data.total); 
+      setQuantity(data.amount);
+      props.handleTotalUptade(data.total);
     } catch (error) {
       console.error("Error in handleDecrease: ", error);
     }
   };
+
 
   return (
     <Row className="pb-4">
@@ -75,7 +79,7 @@ const CartItem = (props) => {
         xs="1"
         className="d-flex justify-content-center align-items-center p-0"
       >
-        <button className="fs-5 transparent_button">
+        <button className="fs-5 transparent_button"  onClick={() => props.handleMealDelete(props.id)}>
           <i className="fa-solid fa-trash"></i>
         </button>
       </Col>

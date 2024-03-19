@@ -52,5 +52,14 @@ namespace restaurant.Server.Controllers
             var data = _orderService.UptadeAmount(anonId.Value, rowId, true);
             return Ok(data);
         }
+
+        [HttpDelete("deleteOrderRow")]
+        public IActionResult DeleteMeal([FromBody] int rowId)
+        {
+            var anonId = _anonCustomerService.GetAnonCustomer();
+            _orderService.DeleteOrderRow(anonId.Value, rowId);
+            return Ok();
+        }
+
     }
 }

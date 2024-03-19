@@ -114,4 +114,22 @@ public class OrderService : IOrderService
         var data = new { Amount = orderRow.Amount, Sum = orderRow.Total, Total = order?.Total };
         return data;
     }
+
+    public void DeleteOrderRow(Guid anonId, int rowId)
+    {
+        var order = _db.Orders
+            .Include(o => o.OrderRows)?
+            .OrderBy(e => e.Id)
+            .LastOrDefault(o => o.AnonId == anonId && o.IsPaid == false);
+        var orderRow = order.OrderRows.FirstOrDefault(o => o.Id == rowId);
+
+        _db.OrderRows.Remove(orderRow);
+        _db.SaveChanges();
+
+        if (order?.OrderRows?.Count == 0)
+            _db.Orders.Remove(order);
+
+        _db.SaveChanges();
+    }
+
 }

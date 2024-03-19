@@ -89,19 +89,6 @@ const Cart = (props) => {
           {renderHeader()}
         </Offcanvas.Header>
         <Offcanvas.Body>{renderComponent()}</Offcanvas.Body>
-        {/* <Row className="px-4 pb-3">
-          <Col className="d-flex justify-content-end">
-            {currentComponent !== 3 && (
-              <Button
-                onClick={handleNextButtonClick}
-                className="cartNext-but"
-                size="md"
-              >
-                Next
-              </Button>
-            )}
-          </Col>
-        </Row> */}
       </Offcanvas>
 
       {/* {isMobile && (
