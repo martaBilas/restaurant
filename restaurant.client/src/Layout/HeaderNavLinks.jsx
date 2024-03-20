@@ -28,11 +28,11 @@ const HeaderNavLinks = () => {
           <NavLink to="/">Menu</NavLink>
         </li>
         <li>
-          <NavLink to="/contactInfo">Contact</NavLink>
+          <NavLink to="/contactInfo">Info</NavLink>
         </li>
-        <li>
+      {/*   <li>
           <NavLink to="/deliveryInfo">Delivery</NavLink>
-        </li>
+        </li> */}
         <li>
           <NavLink to="/signIn">
             <UserLineIcon />

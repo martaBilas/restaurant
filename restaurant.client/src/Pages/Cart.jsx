@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Modal from "react-bootstrap/Modal";
-import { Row, Col, Button, ModalBody } from "react-bootstrap";
+import { ModalBody, ModalHeader } from "react-bootstrap";
 
 import "./Cart.css";
 import OrderDetailsForm from "../Cart/OrderDetailsForm";
@@ -91,11 +91,12 @@ const Cart = (props) => {
         <Offcanvas.Body>{renderComponent()}</Offcanvas.Body>
       </Offcanvas>
 
-      {/* {isMobile && (
+       {isMobile && (
         <Modal show={props.showCart} onHide={props.closeCartHandler}>
-          <ModalBody></ModalBody>
+        <ModalHeader> {renderHeader()} </ModalHeader>
+          <ModalBody> {renderComponent()} </ModalBody>
         </Modal>
-      )} */}
+      )} 
     </React.Fragment>
   );
 };

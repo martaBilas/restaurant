@@ -54,31 +54,3 @@
     display: none;
     color:#421030;
   }
-
-  @media (max-width: 640.98px) and (orientation:portrait)
-  {
-   .display-mobile {
-    display: block !important;
-   }
-   .navbar{
-    display: none !important;
-   }
-   .main-navigation__drawer-nav {
-    margin-top: 50px;
-  }
-  .main-navigation__drawer-nav a{
-    color: #200818;
-  }
-  .main-navigation__drawer-nav ul{
-    display: block;
-  }
-  }
-  @media (min-width: 641px) and (max-width: 900px)
-  {
-    .display-mobile {
-      display: block !important;
-     }
-     .navbar{
-      display: none !important;
-     }
-  }
