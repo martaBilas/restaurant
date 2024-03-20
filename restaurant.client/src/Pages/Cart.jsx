@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import Modal from "react-bootstrap/Modal";
-import { ModalBody, ModalHeader } from "react-bootstrap";
 
 import "./Cart.css";
 import OrderDetailsForm from "../Cart/OrderDetailsForm";
@@ -11,24 +9,24 @@ import EmptyCart from "../Cart/EmptyCart";
 import { fetchOrder } from "../ApiCall";
 
 const Cart = (props) => {
-  const isMobile = window.innerWidth <= 768;
   const [currentComponent, setCurrentComponent] = useState(1);
   const [orderData, setOrderData] = useState(null);
 
+  const getOrderData = async () => {
+    try {
+      const data = await fetchOrder();
+      setOrderData(data);
+    } catch (error) {
+      console.error("Error fetching order data: ", error);
+    }
+  };
+
   useEffect(() => {
-    const getOrderData = async () => {
-      try {
-        const data = await fetchOrder();
-        setOrderData(data);
-      } catch (error) {
-        console.error("Error fetching order data: ", error);
-      }
-    };
     getOrderData();
-  }, []);
+  }, [orderData]);
 
   const renderComponent = () => {
-    if (!orderData) {
+    if (orderData===null) {
       return <EmptyCart />;
     }
     switch (currentComponent) {
@@ -37,6 +35,7 @@ const Cart = (props) => {
           <Order
             orderData={orderData}
             handleNextButtonClick={handleNextButtonClick}
+            refreshOrderData={getOrderData}
           />
         );
       case 2:
@@ -90,13 +89,6 @@ const Cart = (props) => {
         </Offcanvas.Header>
         <Offcanvas.Body>{renderComponent()}</Offcanvas.Body>
       </Offcanvas>
-
-       {isMobile && (
-        <Modal show={props.showCart} onHide={props.closeCartHandler}>
-        <ModalHeader> {renderHeader()} </ModalHeader>
-          <ModalBody> {renderComponent()} </ModalBody>
-        </Modal>
-      )} 
     </React.Fragment>
   );
 };

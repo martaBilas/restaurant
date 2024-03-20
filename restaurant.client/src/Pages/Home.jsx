@@ -11,7 +11,7 @@ const Home = () => {
   return (
     <Container>
       <Row className="py-4">
-        <Col>
+     {/*    <Col>
           <h1>Premium quality food</h1>
           <p className="fs-5">
             Indulge in an exquisite culinary journey at our restaurant, where
@@ -20,8 +20,8 @@ const Home = () => {
             crafted to delight your senses. Savor the finest ingredients sourced
             locally and globally.
           </p>
-        </Col>
-        <Col md="8">
+        </Col> */}
+        <Col md="12">
           <img src="src\assets\img\pic.jpeg" alt="img" className="img-fluid" />
         </Col>
       </Row>

@@ -1,6 +1,7 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import CartItemsList from "./CartItemsList";
 import { Row, Col, Button } from "react-bootstrap";
+import { deleteMealFromOrder } from "../ApiCall";
 
 const Order = (props) => {
   const [meals, setMeals] = useState(props.orderData?.orderRows || []);
@@ -9,14 +10,23 @@ const Order = (props) => {
   const handleTotalUptade = (newTotal) => {
     setTotal(newTotal);
   };
+  const handleMealDelete = async (rowId) => {
+    try {
+      const result = await deleteMealFromOrder(rowId);
+      props.refreshOrderData();
+    } catch (error) {
+      console.error("Error in handleDelete: ", error);
+    }
+  };
+  
   return (
     <>
       <p className="fs-4">Your order:</p>
       {props.orderData?.orderRows && (
         <CartItemsList
           meals={meals}
-          setMeals={setMeals}
           handleTotalUptade={handleTotalUptade}
+          handleMealDelete={handleMealDelete}
         />
       )}
       <hr />
