@@ -9,14 +9,6 @@ const Order = (props) => {
     setTotal(newTotal);
   };
 
-  const handleMealDelete = async (rowId) => {
-    try {
-      const result = await deleteMealFromOrder(rowId);
-      props.refreshOrderData();
-    } catch (error) {
-      console.error("Error in handleDelete: ", error);
-    }
-  };
   
   return (
     <>
@@ -25,7 +17,7 @@ const Order = (props) => {
         <CartItemsList
           meals={props.meals}
           handleTotalUptade={handleTotalUptade}
-          handleMealDelete={handleMealDelete}
+          handleMealDelete={props.handleMealDelete}
         />
       )}
       <hr />

@@ -46,6 +46,7 @@ export const fetchOrder = async () => {
     const response = await axios.get(`${BASE_URL}Order/GetOrder`, {
       withCredentials: true,
     });
+    console.log("it is fetch response" + response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -56,50 +57,62 @@ export const fetchOrder = async () => {
 
 export const decrementMealAmount = async (rowId) => {
   try {
-    const response = await axios.put(`${BASE_URL}Order/DecrementAmount`, rowId, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      withCredentials: true,
-    });
+    const response = await axios.put(
+      `${BASE_URL}Order/DecrementAmount`,
+      rowId,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(
-      "here was an error with the fetch decrement meal amount operation: " + error.message
+      "here was an error with the fetch decrement meal amount operation: " +
+        error.message
     );
   }
 };
 
 export const incrementMealAmount = async (rowId) => {
   try {
-    const response = await axios.put(`${BASE_URL}Order/IncrementAmount`, rowId, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      withCredentials: true,
-    });
+    const response = await axios.put(
+      `${BASE_URL}Order/IncrementAmount`,
+      rowId,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(
-      "here was an error with the fetch increment meal amount operation: " + error.message
+      "here was an error with the fetch increment meal amount operation: " +
+        error.message
     );
   }
 };
 
 export const deleteMealFromOrder = async (rowId) => {
-
-  axios.delete(`${BASE_URL}Order/deleteOrderRow`, {
-    data: JSON.stringify(rowId),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    withCredentials: true,
-  })
-  .then((response) => {
-    console.log(response.data);
-  })
-  .catch((error) => {
-    console.error("Error deleting meal:", error);
-  });
-}
-
+  axios
+    .delete(`${BASE_URL}Order/deleteOrderRow`, {
+      data: JSON.stringify(rowId),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    })
+    .then((response) => {
+      console.log(response.data);
+      console.log("delete end");
+      return response.data;
+    })
+    .catch((error) => {
+      console.error("Error deleting meal:", error);
+      return response.data;
+    });
+};

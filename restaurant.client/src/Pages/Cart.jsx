@@ -6,10 +6,10 @@ import OrderDetailsForm from "../Cart/OrderDetailsForm";
 import Order from "../Cart/Order";
 import ConfirmedOrder from "../Cart/ConfirmedOrder";
 import EmptyCart from "../Cart/EmptyCart";
-import { fetchOrder } from "../ApiCall";
+import { fetchOrder,deleteMealFromOrder } from "../ApiCall";
 
 const Cart = (props) => {
-  const [currentComponent, setCurrentComponent] = useState(1);
+  const [currentComponent, setCurrentComponent] = useState(null);
   const [orderData, setOrderData] = useState(null);
   const [meals, setMeals] = useState([]);
   const [total, setTotal] = useState(0);
@@ -23,12 +23,24 @@ const Cart = (props) => {
     }
   };
 
+  const handleMealDelete = async (rowId) => {
+    console.log("i get in delete")
+    try {
+      const result = await deleteMealFromOrder(rowId);
+      await getOrderData();
+    } catch (error) {
+      console.error("Error in handleDelete: ", error);
+    }
+    
+  };
+
   const getOrderData = async () => {
     try {
       const data = await fetchOrder();
       setOrderData(data);
       setMeals(data.orderRows);
       setTotal(data.total);
+      console.log("Updated meals:", meals);
       setCurrentComponentHandler();
     } catch (error) {
       console.error("Error fetching order data: ", error);
@@ -37,7 +49,15 @@ const Cart = (props) => {
 
   useEffect(() => {
     getOrderData();
-  }, [orderData]);
+  }, []);
+
+  const handleNextButtonClick = () => {
+    setCurrentComponent(prevComponent => prevComponent + 1);
+  };
+
+  const handleBackButtonClick = () => {
+    setCurrentComponent(1);
+  };
 
   const renderComponent = () => {
     switch (currentComponent) {
@@ -50,6 +70,7 @@ const Cart = (props) => {
             total={total}
             handleNextButtonClick={handleNextButtonClick}
             refreshOrderData={getOrderData}
+            handleMealDelete={handleMealDelete}
           />
         );
       case 2:
@@ -61,14 +82,6 @@ const Cart = (props) => {
       default:
         return null;
     }
-  };
-
-  const handleNextButtonClick = () => {
-    setCurrentComponent(currentComponent + 1);
-  };
-
-  const handleBackButtonClick = () => {
-    setCurrentComponent(1);
   };
 
   const renderHeader = () => {
