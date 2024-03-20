@@ -1,15 +1,14 @@
-import { React, useState, useEffect } from "react";
+import { React } from "react";
 import CartItemsList from "./CartItemsList";
 import { Row, Col, Button } from "react-bootstrap";
 import { deleteMealFromOrder } from "../ApiCall";
 
 const Order = (props) => {
-  const [meals, setMeals] = useState(props.orderData?.orderRows || []);
-  const [total, setTotal] = useState(props.orderData?.total || 0);
 
   const handleTotalUptade = (newTotal) => {
     setTotal(newTotal);
   };
+
   const handleMealDelete = async (rowId) => {
     try {
       const result = await deleteMealFromOrder(rowId);
@@ -22,9 +21,9 @@ const Order = (props) => {
   return (
     <>
       <p className="fs-4">Your order:</p>
-      {props.orderData?.orderRows && (
+      {props.meals && (
         <CartItemsList
-          meals={meals}
+          meals={props.meals}
           handleTotalUptade={handleTotalUptade}
           handleMealDelete={handleMealDelete}
         />
@@ -32,7 +31,7 @@ const Order = (props) => {
       <hr />
       <Row className="offset-md-8 row-cols-1">
         <Col>
-          <h4>Total: {total} ₴</h4>
+          <h4>Total: {props.total} ₴</h4>
         </Col>
       </Row>
       <Row className=" pt-3">
