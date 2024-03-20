@@ -14,13 +14,22 @@ const Cart = (props) => {
   const [meals, setMeals] = useState([]);
   const [total, setTotal] = useState(0);
 
+  const setCurrentComponentHandler = () => {
+    if (!meals) {
+      setCurrentComponent(0);
+    }
+    else {
+      setCurrentComponent(1);
+    }
+  };
+
   const getOrderData = async () => {
     try {
       const data = await fetchOrder();
       setOrderData(data);
       setMeals(data.orderRows);
       setTotal(data.total);
-
+      setCurrentComponentHandler();
     } catch (error) {
       console.error("Error fetching order data: ", error);
     }
@@ -31,10 +40,9 @@ const Cart = (props) => {
   }, [orderData]);
 
   const renderComponent = () => {
-    if (orderData === null) {
-      return <EmptyCart />;
-    }
     switch (currentComponent) {
+      case 0:
+        return <EmptyCart />;
       case 1:
         return (
           <Order
