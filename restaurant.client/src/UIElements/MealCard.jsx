@@ -44,7 +44,7 @@ const MealCard = (props) => {
                     {props.description}
                 </Card.Text>
             )}
-            <Row className="pt-2">
+            <Row className="m-0 short-row">
                 <Col
                     md="4"
                     xs="4"
@@ -55,7 +55,7 @@ const MealCard = (props) => {
                 <Col
                     md="2"
                     xs="2"
-                    className="d-flex justify-content-center align-items-center p-0"
+                    className="d-flex justify-content-center align-items-center p-0 "
                 >
                     <button
                         className="fs-4 transparent_button "

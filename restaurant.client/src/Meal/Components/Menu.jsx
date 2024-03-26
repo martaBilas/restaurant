@@ -10,7 +10,7 @@ const Menu = (props) => {
     return (
     <Row>
       {filteredMenuData.map((item) => (
-        <div key={item.id} className="col-md-4  mb-4">
+        <div key={item.id} className="col-lg-4 col-md-6 col-sm-6 col-6 mb-4" >
           <MenuItem
             id={item.id}
             name={item.name}

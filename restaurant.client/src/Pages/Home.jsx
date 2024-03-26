@@ -32,10 +32,7 @@ const Home = () => {
           setMeals={setMeals}
         />
       </Row>
-
-      <Row>
         <Menu meals={meals} />
-      </Row>
     </Container>
   );
 };

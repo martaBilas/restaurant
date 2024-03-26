@@ -21,7 +21,7 @@ const Catalogue = ({ setSelectedCatalogueItem, setMeals }) => {
     setMeals(meals);
   };
 
-    const isMobile = window.innerWidth <= 768;
+    const isMobile = window.innerWidth <= 991;
     const isTablet = window.innerWidth <= 1000;
 
   useEffect(() => {
