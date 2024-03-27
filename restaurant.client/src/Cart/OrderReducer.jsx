@@ -23,7 +23,9 @@ export const orderReducer = (state, action) => {
         const newTotal = newMeals.reduce(
           (total, meal) => total + meal.price * meal.quantity,0
         );
-        return { meals: newMeals, total: newTotal };
+        const newOrder ={ meals: newMeals, total: newTotal }
+        console.log("i am from reducer"+newOrder)
+        return newOrder;
       }
     }
     case "changeAmount": {

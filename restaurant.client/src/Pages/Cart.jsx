@@ -6,22 +6,20 @@ import OrderDetailsForm from "../Cart/OrderDetailsForm";
 import Order from "../Cart/Order";
 import ConfirmedOrder from "../Cart/ConfirmedOrder";
 import EmptyCart from "../Cart/EmptyCart";
-import { fetchOrder, deleteMealFromOrder } from "../ApiCall";
-
+import { useOrder } from "../Cart/OrderContext";
 
 const Cart = (props) => {
-  console.log(props)
-  const [currentComponent, setCurrentComponent] = useState(0);
-  const [orderData, setOrder] = useState(null);
-  const [meals, setMeals] = useState([]);
-  const [total, setTotal] = useState(0);
+  const order = useOrder();
+  const meals = order.meals;
+  console.log("i am order from context" + meals);
 
-  const setTotalHandler = (total) => {
-    setTotal(total);
-    console.log("I end set total handler.");
-  };
+  const [currentComponent, setCurrentComponent] = useState(0);
+  /*   const [orderData, setOrder] = useState(null);
+  const [meals, setMeals] = useState([]);
+  const [total, setTotal] = useState(0); */
 
   const setCurrentComponentHandler = () => {
+    console.log("Amount of meals:", meals);
     if (meals.length === 0) {
       setCurrentComponent(0);
     } else {
@@ -30,36 +28,15 @@ const Cart = (props) => {
     console.log("I end set current component data handler.");
   };
 
-  const handleMealDelete = async (rowId) => {
-    console.log("i get in delete");
-    try {
-      await deleteMealFromOrder(rowId);
-      await getOrder();
-    } catch (error) {
-      console.error("Error in handleDelete: ", error);
-    }
-  };
-
-  const getOrder = async () => {
-    try {
-      const data = await fetchOrder();
-      setOrder(data);
-      console.log("Data from set order data: " + orderData);
-      setMeals(data.orderRows);
-      console.log("Data after set meals: " + meals);
-      setTotalHandler(data.total);
-      console.log("Total: " + total);
-      setCurrentComponentHandler();
-      console.log("We get order data: " + orderData);
-    } catch (error) {
-      console.error("Error fetching order data: ", error);
-    }
-  };
+  // const getOrder = () => {
+  //   console.log("2 i am order from context" + order.meals);
+  //   setMeals(order.meals);
+  //   setCurrentComponentHandler();
+  // };
 
   useEffect(() => {
-    getOrder();
-  }, []);
-
+    setCurrentComponentHandler();
+  }, [meals]);
 
   const handleNextButtonClick = () => {
     setCurrentComponent((prevComponent) => prevComponent + 1);
@@ -74,15 +51,7 @@ const Cart = (props) => {
       case 0:
         return <EmptyCart />;
       case 1:
-        return (
-          <Order
-            meals={meals}
-            total={total}
-            handleNextButtonClick={handleNextButtonClick}
-            refreshOrderData={getOrderData}
-            handleMealDelete={handleMealDelete}
-          />
-        );
+        return <Order handleNextButtonClick={handleNextButtonClick} />;
       case 2:
         return (
           <OrderDetailsForm handleNextButtonClick={handleNextButtonClick} />

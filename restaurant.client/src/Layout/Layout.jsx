@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router";
 
+import { OrderProvider } from "../Cart/OrderContext.jsx";
 import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 import "./Layout.css";
@@ -8,9 +9,11 @@ import "./Layout.css";
 const Layout = () => {
   return (
     <div className="layout">
-      <Header />
-      <Outlet />
-      <Footer />
+      <OrderProvider>
+        <Header />
+        <Outlet />
+        <Footer />
+      </OrderProvider>
     </div>
   );
 };

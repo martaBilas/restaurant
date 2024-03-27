@@ -1,14 +1,14 @@
 import { useReducer, createContext, useContext } from "react";
 import { orderReducer } from "./OrderReducer";
 
-const OrderContext = createContext(null);
-const OrderDispatchContext = createContext(null);
-
 const initailOrder = { meals: [], total: 0 };
+const OrderContext = createContext(initailOrder);
+const OrderDispatchContext = createContext(null);
 
 export function OrderProvider({ children }) {
   const [order, dispatch] = useReducer(orderReducer, initailOrder);
-
+  console.log('I should work after dispatch:', order);  
+  
   return (
     <OrderContext.Provider value={order}>
       <OrderDispatchContext.Provider value={dispatch}>
@@ -19,9 +19,13 @@ export function OrderProvider({ children }) {
 }
 
 export function useOrder() {
-  return useContext(OrderContext);
+    const order = useContext(OrderContext);
+    console.log("useOrder - Order:", order);
+    return order;
 }
 
 export function useOrderDispatch(){
-    return useContext(OrderDispatchContext)
+    const dispatch = useContext(OrderDispatchContext);
+    console.log("useOrderDispatch - Dispatch:", dispatch);
+    return dispatch;
 }

@@ -2,13 +2,11 @@ import React, { useState } from "react";
 import "./Menu.css";
 import { Row } from "react-bootstrap";
 import MenuItem from "./MenuItem";
-import { OrderProvider } from "../Cart/OrderContext";
 
 const Menu = (props) => {
   const filteredMenuData = props.meals;
 
   return (
-    <OrderProvider>
       <Row>
         {filteredMenuData.map((item) => (
           <div key={item.id} className="col-lg-4 col-md-6 col-sm-6 col-6 mb-4">
@@ -24,7 +22,6 @@ const Menu = (props) => {
           </div>
         ))}
       </Row>
-    </OrderProvider>
   );
 };
 
