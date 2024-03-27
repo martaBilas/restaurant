@@ -29,16 +29,15 @@ export const fetchCategories = async () => {
 };
 
 export const addMealToCart = async (addModel) => {
-  axios
-    .post(`${BASE_URL}Order/addMealToOrder`, addModel, {
+  try {
+    const response = await axios.post(`${BASE_URL}Order/addMealToOrder`, addModel, {
       withCredentials: true,
-    })
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error("Error adding to cart:", error);
     });
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+  }
 };
 
 export const fetchOrder = async () => {
