@@ -6,53 +6,63 @@ import OrderDetailsForm from "../Cart/OrderDetailsForm";
 import Order from "../Cart/Order";
 import ConfirmedOrder from "../Cart/ConfirmedOrder";
 import EmptyCart from "../Cart/EmptyCart";
-import { fetchOrder,deleteMealFromOrder } from "../ApiCall";
+import { fetchOrder, deleteMealFromOrder } from "../ApiCall";
+
 
 const Cart = (props) => {
-  const [currentComponent, setCurrentComponent] = useState(null);
-  const [orderData, setOrderData] = useState(null);
+  console.log(props)
+  const [currentComponent, setCurrentComponent] = useState(0);
+  const [orderData, setOrder] = useState(null);
   const [meals, setMeals] = useState([]);
   const [total, setTotal] = useState(0);
 
+  const setTotalHandler = (total) => {
+    setTotal(total);
+    console.log("I end set total handler.");
+  };
+
   const setCurrentComponentHandler = () => {
-    if (!meals) {
+    if (meals.length === 0) {
       setCurrentComponent(0);
-    }
-    else {
+    } else {
       setCurrentComponent(1);
     }
+    console.log("I end set current component data handler.");
   };
 
   const handleMealDelete = async (rowId) => {
-    console.log("i get in delete")
+    console.log("i get in delete");
     try {
-      const result = await deleteMealFromOrder(rowId);
-      await getOrderData();
+      await deleteMealFromOrder(rowId);
+      await getOrder();
     } catch (error) {
       console.error("Error in handleDelete: ", error);
     }
-    
   };
 
-  const getOrderData = async () => {
+  const getOrder = async () => {
     try {
       const data = await fetchOrder();
-      setOrderData(data);
+      setOrder(data);
+      console.log("Data from set order data: " + orderData);
       setMeals(data.orderRows);
-      setTotal(data.total);
-      console.log("Updated meals:", meals);
+      console.log("Data after set meals: " + meals);
+      setTotalHandler(data.total);
+      console.log("Total: " + total);
       setCurrentComponentHandler();
+      console.log("We get order data: " + orderData);
     } catch (error) {
       console.error("Error fetching order data: ", error);
     }
   };
 
   useEffect(() => {
-    getOrderData();
+    getOrder();
   }, []);
 
+
   const handleNextButtonClick = () => {
-    setCurrentComponent(prevComponent => prevComponent + 1);
+    setCurrentComponent((prevComponent) => prevComponent + 1);
   };
 
   const handleBackButtonClick = () => {
@@ -103,20 +113,18 @@ const Cart = (props) => {
   };
 
   return (
-    <React.Fragment>
-      <Offcanvas
-        placement="end"
-        show={props.showCart}
-        onHide={props.closeCartHandler}
-        className="custom-offcanvas d-flex flex-column justify-content-between"
-        backdropClassName="custom-offcanvas-backdrop"
-      >
-        <Offcanvas.Header className="pb-0" closeButton>
-          {renderHeader()}
-        </Offcanvas.Header>
-        <Offcanvas.Body>{renderComponent()}</Offcanvas.Body>
-      </Offcanvas>
-    </React.Fragment>
+    <Offcanvas
+      placement="end"
+      show={props.showCart}
+      onHide={props.closeCartHandler}
+      className="custom-offcanvas d-flex flex-column justify-content-between"
+      backdropClassName="custom-offcanvas-backdrop"
+    >
+      <Offcanvas.Header className="pb-0" closeButton>
+        {renderHeader()}
+      </Offcanvas.Header>
+      <Offcanvas.Body>{renderComponent()}</Offcanvas.Body>
+    </Offcanvas>
   );
 };
 

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
-import Catalogue from "../Meal/Components/Catalogue";
-import Menu from "../Meal/Components/Menu";
+import Catalogue from "../Catalog/Catalogue";
+import Menu from "../Menu/Menu";
 
 const Home = () => {
   const [selectedCatalogueItem, setSelectedCatalogueItem] = useState(1); // manage state here
