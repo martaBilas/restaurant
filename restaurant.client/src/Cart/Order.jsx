@@ -1,29 +1,20 @@
 import { React } from "react";
 import CartItemsList from "./CartItemsList";
 import { Row, Col, Button } from "react-bootstrap";
-import { deleteMealFromOrder } from "../ApiCall";
+import { useOrder } from "./OrderContext";
 
 const Order = (props) => {
-
-  const handleTotalUptade = (newTotal) => {
-    setTotal(newTotal);
-  };
-
+  const order = useOrder();
+  const total = order.total;
   
   return (
     <>
       <p className="fs-4">Your order:</p>
-      {props.meals && (
-        <CartItemsList
-          meals={props.meals}
-          handleTotalUptade={handleTotalUptade}
-          handleMealDelete={props.handleMealDelete}
-        />
-      )}
+      <CartItemsList />
       <hr />
       <Row className="offset-md-8 row-cols-1">
         <Col>
-          <h4>Total: {props.total} ₴</h4>
+          <h4>Total: {total} ₴</h4>
         </Col>
       </Row>
       <Row className=" pt-3">

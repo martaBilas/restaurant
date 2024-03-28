@@ -29,6 +29,7 @@ const MenuItem = (props) => {
         imageUrl={props.imageUrl}
         name={props.name}
         price={props.price}
+        weight={props.weight}
         handleDecrease={handleDecrease}
         handleIncrease={handleIncrease}
         quantity={quantity}

@@ -19,7 +19,8 @@ const MealCard = (props) => {
         imageUrl: props.imageUrl,
         name: props.name,
         price: props.price,
-        quantity: props.quantity,
+        weight:props.weight,
+        amount: props.quantity,
       };
       const response = await addMealToCart(addModel);
       if (response.status === 200) {

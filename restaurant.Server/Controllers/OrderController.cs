@@ -54,10 +54,10 @@ namespace restaurant.Server.Controllers
         }
 
         [HttpDelete("deleteOrderRow")]
-        public IActionResult DeleteMeal([FromBody] int rowId)
+        public IActionResult DeleteMeal([FromBody] int mealId)
         {
             var anonId = _anonCustomerService.GetAnonCustomer();
-            _orderService.DeleteOrderRow(anonId.Value, rowId);
+            _orderService.DeleteOrderRow(anonId.Value, mealId);
             return Ok();
         }
 

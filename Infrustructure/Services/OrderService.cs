@@ -115,17 +115,24 @@ public class OrderService : IOrderService
         return data;
     }
 
-    public void DeleteOrderRow(Guid anonId, int rowId)
+    public void DeleteOrderRow(Guid anonId, int mealId)
     {
-        var order = _db.Orders
-            .Include(o => o.OrderRows)?
+
+        var order = _db.Orders?
+            .Include(o => o.OrderRows)
+            .ThenInclude(o => o.Meal)
             .OrderBy(e => e.Id)
-            .LastOrDefault(o => o.AnonId == anonId && o.IsPaid == false);
-        var orderRow = order.OrderRows.FirstOrDefault(o => o.Id == rowId);
+            .LastOrDefault(e => e.AnonId == anonId && e.IsPaid == false);
+        if (order != null)
+        {
+            var orderRowToDelete = order.OrderRows.FirstOrDefault(or => or.Meal.Id == mealId);
 
-        _db.OrderRows.Remove(orderRow);
-        _db.SaveChanges();
+            if (orderRowToDelete != null)
+            {
+                _db.OrderRows.Remove(orderRowToDelete);
+            }
 
+        }
         if (order?.OrderRows?.Count == 0)
             _db.Orders.Remove(order);
 

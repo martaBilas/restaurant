@@ -30,9 +30,13 @@ export const fetchCategories = async () => {
 
 export const addMealToCart = async (addModel) => {
   try {
-    const response = await axios.post(`${BASE_URL}Order/addMealToOrder`, addModel, {
-      withCredentials: true,
-    });
+    const response = await axios.post(
+      `${BASE_URL}Order/addMealToOrder`,
+      addModel,
+      {
+        withCredentials: true,
+      }
+    );
     console.log(response);
     return response;
   } catch (error) {
@@ -96,22 +100,21 @@ export const incrementMealAmount = async (rowId) => {
   }
 };
 
-export const deleteMealFromOrder = async (rowId) => {
-  axios
-    .delete(`${BASE_URL}Order/deleteOrderRow`, {
-      data: JSON.stringify(rowId),
+export const deleteMealFromOrder = async (mealId) => {
+  try{
+  const response = await axios.delete(`${BASE_URL}Order/deleteOrderRow`, {
+      data: JSON.stringify(mealId),
       headers: {
         "Content-Type": "application/json",
       },
       withCredentials: true,
     })
-    .then((response) => {
-      console.log(response.data);
+
+      console.log(response);
       console.log("delete end");
-      return response.data;
-    })
-    .catch((error) => {
+      return response;
+  }
+    catch(error){
       console.error("Error deleting meal:", error);
-      return response.data;
-    });
+    };
 };

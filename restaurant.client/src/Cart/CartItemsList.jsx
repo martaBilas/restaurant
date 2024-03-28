@@ -1,9 +1,11 @@
 import React from "react";
 import { Row } from "react-bootstrap";
 import CartItem from "./CartItem";
+import { useOrder } from "./OrderContext";
 
-const CartItemsList = (props) => {
-  const meals = props.meals;
+const CartItemsList = () => {
+  const order = useOrder();
+  const meals = order.meals;
 
   return (
     <Row>
@@ -11,13 +13,11 @@ const CartItemsList = (props) => {
         <div key={item.id}>
           <CartItem
             id={item.id}
-            name={item.mealName}
+            name={item.name}
             imageUrl={item.imageUrl}
             price={item.price}
             weight={item.weight}
             amount={item.amount}
-            handleTotalUptade={props.handleTotalUptade}
-            handleMealDelete={props.handleMealDelete} 
           />
         </div>
       ))}

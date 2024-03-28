@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 import { Row, Col } from "react-bootstrap";
 import "./CartItem.css";
-
+import { useOrderDispatch } from "./OrderContext";
 import {
   incrementMealAmount,
   decrementMealAmount,
@@ -10,12 +10,12 @@ import {
 
 const CartItem = (props) => {
   const [quantity, setQuantity] = useState(props?.amount || 0);
+  const dispatch = useOrderDispatch();
 
   const handleIncrease = async () => {
     try {
       const data = await incrementMealAmount(props.id);
       setQuantity(data.amount);
-      props.handleTotalUptade(data.total);
     } catch (error) {
       console.error("Error in handleIncrease: ", error);
     }
@@ -25,12 +25,21 @@ const CartItem = (props) => {
     try {
       const data = await decrementMealAmount(props.id);
       setQuantity(data.amount);
-      props.handleTotalUptade(data.total);
     } catch (error) {
       console.error("Error in handleDecrease: ", error);
     }
   };
 
+  const handleMealDelete = async () => {
+    try {
+      const response = await deleteMealFromOrder(props.id);
+      if (response.status === 200) {
+        dispatch({ type: "delete", id: props.id });
+      }
+    } catch (error) {
+      console.error("Error in handleDeleteMeal: ", error);
+    }
+  };
 
   return (
     <Row className="pb-4">
@@ -79,7 +88,10 @@ const CartItem = (props) => {
         xs="1"
         className="d-flex justify-content-center align-items-center p-0"
       >
-        <button className="fs-5 transparent_button"  onClick={() => props.handleMealDelete(props.id)}>
+        <button
+          className="fs-5 transparent_button"
+          onClick={handleMealDelete}
+        >
           <i className="fa-solid fa-trash"></i>
         </button>
       </Col>
