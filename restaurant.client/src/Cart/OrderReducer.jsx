@@ -24,6 +24,20 @@ export const orderReducer = (state, action) => {
       }
     }
     case "changeAmount": {
+      const mealIndexToChange = state.meals.findIndex(
+        (meal) => meal.id === action.id
+      );
+      if (mealIndexToChange >= 0) {
+        const newMeals = [...state.meals];
+        newMeals[mealIndexToChange].amount = action.amount;
+        const newTotal = newMeals.reduce(
+          (total, meal) => total + meal.price * meal.amount,
+          0
+        );
+        return { meals: newMeals, total: newTotal };
+      } else {
+        return state;
+      }
     }
     case "delete": {
       const mealIndexToDelete = state.meals.findIndex(

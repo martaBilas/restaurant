@@ -87,32 +87,23 @@ public class OrderService : IOrderService
         };
         return orderModel;
     }
-    public object UptadeAmount(Guid anonId, int rowId, bool increment)
+    public int UptadeAmount(Guid anonId, int mealId, bool increment)
     {
         var orderRow = _db.Orders
-            .Include(o => o.OrderRows)
-            .OrderBy(e => e.Id)
-            .LastOrDefault(o => o.AnonId == anonId && o.IsPaid == false)?
-            .OrderRows?
-            .FirstOrDefault(o => o.Id == rowId);
+             .Where(o => o.AnonId == anonId && !o.IsPaid)
+             .OrderByDescending(o => o.Id)
+             .SelectMany(o => o.OrderRows)
+             .Include(or => or.Meal)
+             .FirstOrDefault(or => or.Meal.Id == mealId);
 
-        if (orderRow == null)
-            return null;
-
-        if (increment)
+        if (orderRow != null && increment)
             orderRow.Amount += 1;
         else if (orderRow.Amount > 1)
             orderRow.Amount -= 1;
-
+        var amount = orderRow.Amount;
         _db.SaveChanges();
 
-        var order = _db.Orders
-            .Include(o => o.OrderRows)
-            .OrderBy(e => e.Id)
-            .LastOrDefault(o => o.AnonId == anonId && o.IsPaid == false);
-
-        var data = new { Amount = orderRow.Amount, Sum = orderRow.Total, Total = order?.Total };
-        return data;
+        return amount;
     }
 
     public void DeleteOrderRow(Guid anonId, int mealId)

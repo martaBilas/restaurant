@@ -38,19 +38,34 @@ namespace restaurant.Server.Controllers
         }
 
         [HttpPut("DecrementAmount")]
-        public IActionResult DecrementAmount([FromBody] int rowId)
+        public IActionResult DecrementAmount([FromBody] int mealId)
         {
-            var anonId = _anonCustomerService.GetAnonCustomer();
-            var data = _orderService.UptadeAmount(anonId.Value, rowId, false);
-            return Ok(data);
+            try
+            {
+                var anonId = _anonCustomerService.GetAnonCustomer();
+                var amount = _orderService.UptadeAmount(anonId.Value, mealId, false);
+                return Ok(amount);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occurred while decrement the amount: {ex.Message}");
+            }
+
         }
 
         [HttpPut("IncrementAmount")]
-        public IActionResult IncrementAmount([FromBody] int rowId)
+        public IActionResult IncrementAmount([FromBody] int mealId)
         {
-            var anonId = _anonCustomerService.GetAnonCustomer();
-            var data = _orderService.UptadeAmount(anonId.Value, rowId, true);
-            return Ok(data);
+            try
+            {
+                var anonId = _anonCustomerService.GetAnonCustomer();
+                var amount = _orderService.UptadeAmount(anonId.Value, mealId, true);
+                return Ok(amount);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occurred while increment the amount: {ex.Message}");
+            }
         }
 
         [HttpDelete("deleteOrderRow")]

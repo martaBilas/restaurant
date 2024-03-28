@@ -58,11 +58,11 @@ export const fetchOrder = async () => {
   }
 };
 
-export const decrementMealAmount = async (rowId) => {
+export const decrementMealAmount = async (mealId) => {
   try {
     const response = await axios.put(
       `${BASE_URL}Order/DecrementAmount`,
-      rowId,
+      mealId,
       {
         headers: {
           "Content-Type": "application/json",
@@ -70,7 +70,7 @@ export const decrementMealAmount = async (rowId) => {
         withCredentials: true,
       }
     );
-    return response.data;
+    return response;
   } catch (error) {
     console.error(
       "here was an error with the fetch decrement meal amount operation: " +
@@ -79,11 +79,11 @@ export const decrementMealAmount = async (rowId) => {
   }
 };
 
-export const incrementMealAmount = async (rowId) => {
+export const incrementMealAmount = async (mealId) => {
   try {
     const response = await axios.put(
       `${BASE_URL}Order/IncrementAmount`,
-      rowId,
+      mealId,
       {
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +91,7 @@ export const incrementMealAmount = async (rowId) => {
         withCredentials: true,
       }
     );
-    return response.data;
+    return response;
   } catch (error) {
     console.error(
       "here was an error with the fetch increment meal amount operation: " +

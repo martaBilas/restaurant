@@ -9,13 +9,18 @@ import {
 } from "../ApiCall";
 
 const CartItem = (props) => {
-  const [quantity, setQuantity] = useState(props?.amount || 0);
   const dispatch = useOrderDispatch();
 
   const handleIncrease = async () => {
     try {
-      const data = await incrementMealAmount(props.id);
-      setQuantity(data.amount);
+      const response = await incrementMealAmount(props.id);
+      if (response.status === 200) {
+        dispatch({
+          type: "changeAmount",
+          id: props.id,
+          amount: response.data,
+        });
+      }
     } catch (error) {
       console.error("Error in handleIncrease: ", error);
     }
@@ -23,8 +28,14 @@ const CartItem = (props) => {
 
   const handleDecrease = async () => {
     try {
-      const data = await decrementMealAmount(props.id);
-      setQuantity(data.amount);
+      const response = await decrementMealAmount(props.id);
+      if (response.status === 200) {
+        dispatch({
+          type: "changeAmount",
+          id: props.id,
+          amount: response.data,
+        });
+      }
     } catch (error) {
       console.error("Error in handleDecrease: ", error);
     }
@@ -71,7 +82,7 @@ const CartItem = (props) => {
         <input
           type="text"
           className="cart-input text-center"
-          value={quantity}
+          value={props.amount}
           readOnly
         />
       </Col>
@@ -88,10 +99,7 @@ const CartItem = (props) => {
         xs="1"
         className="d-flex justify-content-center align-items-center p-0"
       >
-        <button
-          className="fs-5 transparent_button"
-          onClick={handleMealDelete}
-        >
+        <button className="fs-5 transparent_button" onClick={handleMealDelete}>
           <i className="fa-solid fa-trash"></i>
         </button>
       </Col>

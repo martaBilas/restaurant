@@ -5,8 +5,8 @@ namespace Infrastructure.Interfaces;
 
 public interface IOrderService
 {
-    void AddOrUpdateOrder(Guid anonId, int mealId, int amount);
-    void DeleteOrderRow(Guid anonId, int rowId);
+    public void AddOrUpdateOrder(Guid anonId, int mealId, int amount);
+    public void DeleteOrderRow(Guid anonId, int mealId);
     public OrderModel GetOrder(Guid? anonId);
-    object UptadeAmount(Guid anonId, int rowId, bool increment);
+    public int UptadeAmount(Guid anonId, int mealId, bool increment);
 }
