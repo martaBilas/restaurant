@@ -49,7 +49,6 @@ export const fetchOrder = async () => {
     const response = await axios.get(`${BASE_URL}Order/GetOrder`, {
       withCredentials: true,
     });
-    console.log("it is fetch response" + response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -109,9 +108,6 @@ export const deleteMealFromOrder = async (mealId) => {
       },
       withCredentials: true,
     })
-
-      console.log(response);
-      console.log("delete end");
       return response;
   }
     catch(error){

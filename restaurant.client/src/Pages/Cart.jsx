@@ -14,9 +14,6 @@ const Cart = (props) => {
   console.log("i am order from context" + meals);
 
   const [currentComponent, setCurrentComponent] = useState(0);
-  /*   const [orderData, setOrder] = useState(null);
-  const [meals, setMeals] = useState([]);
-  const [total, setTotal] = useState(0); */
 
   const setCurrentComponentHandler = () => {
     console.log("Amount of meals:", meals);
@@ -25,14 +22,7 @@ const Cart = (props) => {
     } else {
       setCurrentComponent(1);
     }
-    console.log("I end set current component data handler.");
   };
-
-  // const getOrder = () => {
-  //   console.log("2 i am order from context" + order.meals);
-  //   setMeals(order.meals);
-  //   setCurrentComponentHandler();
-  // };
 
   useEffect(() => {
     setCurrentComponentHandler();

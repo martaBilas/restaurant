@@ -6,8 +6,7 @@ const OrderContext = createContext(initailOrder);
 const OrderDispatchContext = createContext(null);
 
 export function OrderProvider({ children }) {
-  const [order, dispatch] = useReducer(orderReducer, initailOrder);
-  console.log('I should work after dispatch:', order);  
+  const [order, dispatch] = useReducer(orderReducer, initailOrder); 
   
   return (
     <OrderContext.Provider value={order}>
@@ -20,12 +19,10 @@ export function OrderProvider({ children }) {
 
 export function useOrder() {
     const order = useContext(OrderContext);
-    console.log("useOrder - Order:", order);
     return order;
 }
 
 export function useOrderDispatch(){
     const dispatch = useContext(OrderDispatchContext);
-    console.log("useOrderDispatch - Dispatch:", dispatch);
     return dispatch;
 }
