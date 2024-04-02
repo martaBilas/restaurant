@@ -1,21 +1,33 @@
 import React from "react";
 import { Row, Col, Button, Form, FloatingLabel } from "react-bootstrap";
 import { Formik } from "formik";
+import { placeOrder } from "../ApiCall";
 
 import validationSchema from "../UIElements/validationSchema";
 
 const OrderDetailsForm = (props) => {
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    } else {
-      props.handleNextButtonClick();
+  const handleOrderSubmit = async (values) => {
+    event.preventDefault();
+    event.stopPropagation();
+    try {
+      const model = {
+        name: values.name,
+        surname: values.surname,
+        address: values.address,
+        phone: values.phone,
+        email: values.email,
+        paymentType: values.paymentType,
+        additionalInfo: values.additionInfo,
+      };
+      const response = await placeOrder(model);
+      if (response.status === 200) {
+        props.handleNextButtonClick();
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
     }
-
-    setValidated(true);
   };
+
   return (
     <>
       <p className="fs-4 pt-0">Confirm order:</p>
@@ -35,6 +47,9 @@ const OrderDetailsForm = (props) => {
           email: "",
           paymentType: "",
           additionInfo: "",
+        }}
+        onSubmit={(values) => {
+          handleOrderSubmit(values);
         }}
       >
         {({ handleSubmit, handleChange, values, touched, errors }) => (

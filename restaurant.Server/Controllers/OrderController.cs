@@ -76,5 +76,24 @@ namespace restaurant.Server.Controllers
             return Ok();
         }
 
+        [HttpPost("placeOrder")]
+        public IActionResult PlaceOrder([FromBody]PlaceOrderModel model)
+        {
+            try
+            {
+                var anonId = _anonCustomerService.GetAnonCustomer();
+                if (ModelState.IsValid)
+                {
+                    _orderService.PlaceOrder(anonId.Value, model.Name, model.Surname, model.Address, model.Email, model.Phone, model.PaymentType, model.AdditionalInfo);
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occurred while plaicng order: {ex.Message}");
+            }
+        }
+
+
     }
 }

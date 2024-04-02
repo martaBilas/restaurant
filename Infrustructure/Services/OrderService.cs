@@ -130,4 +130,28 @@ public class OrderService : IOrderService
         _db.SaveChanges();
     }
 
+    public void PlaceOrder(Guid anonId, string name, string surname, string adress, string email, string phone, int paymentType, string additionalInfo)
+    {
+        var customer = new Customer
+        {
+            FirstName = name,
+            LastName = surname,
+            Address = adress,
+            Email = email,
+            PhoneNumber = phone,
+        };
+
+        var order = _db.Orders
+                         .OrderBy(e => e.Id)
+                         .LastOrDefault(o => o.AnonId == anonId && o.IsPaid == false);
+        order.Customer = customer;
+        order.IsPaid = true;
+        if(additionalInfo != null) 
+            order.AdditionalInfo = additionalInfo;
+        order.PaymentType = (Domain.Enums.PaymentType)paymentType;
+
+        _db.SaveChanges();
+
+    }
+
 }

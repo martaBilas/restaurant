@@ -11,12 +11,10 @@ import { useOrder } from "../Cart/OrderContext";
 const Cart = (props) => {
   const order = useOrder();
   const meals = order.meals;
-  console.log("i am order from context" + meals);
 
   const [currentComponent, setCurrentComponent] = useState(0);
 
   const setCurrentComponentHandler = () => {
-    console.log("Amount of meals:", meals);
     if (meals.length === 0) {
       setCurrentComponent(0);
     } else {

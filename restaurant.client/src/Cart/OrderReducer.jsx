@@ -19,7 +19,6 @@ export const orderReducer = (state, action) => {
           0
         );
         const newOrder = { meals: newMeals, total: newTotal };
-        console.log("i am from reducer" + newOrder);
         return newOrder;
       }
     }

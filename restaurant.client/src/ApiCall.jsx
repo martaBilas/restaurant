@@ -37,7 +37,6 @@ export const addMealToCart = async (addModel) => {
         withCredentials: true,
       }
     );
-    console.log(response);
     return response;
   } catch (error) {
     console.error("Error adding to cart:", error);
@@ -100,17 +99,31 @@ export const incrementMealAmount = async (mealId) => {
 };
 
 export const deleteMealFromOrder = async (mealId) => {
-  try{
-  const response = await axios.delete(`${BASE_URL}Order/deleteOrderRow`, {
+  try {
+    const response = await axios.delete(`${BASE_URL}Order/deleteOrderRow`, {
       data: JSON.stringify(mealId),
       headers: {
         "Content-Type": "application/json",
       },
       withCredentials: true,
-    })
-      return response;
+    });
+    return response;
+  } catch (error) {
+    console.error("Error deleting meal:", error);
   }
-    catch(error){
-      console.error("Error deleting meal:", error);
-    };
+};
+
+export const placeOrder = async (placeOrderModel) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}Order/placeOrder`,
+      placeOrderModel,
+      {
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error place order:" + error);
+  }
 };
