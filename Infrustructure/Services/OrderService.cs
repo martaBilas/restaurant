@@ -1,5 +1,6 @@
 ﻿using DataContext;
 using Domain;
+using Domain.Idenity;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
@@ -132,13 +133,15 @@ public class OrderService : IOrderService
 
     public void PlaceOrder(Guid anonId, string name, string surname, string adress, string email, string phone, int paymentType, string additionalInfo)
     {
-        var customer = new Customer
+        var customer = new AppUser
         {
             FirstName = name,
             LastName = surname,
             Address = adress,
             Email = email,
             PhoneNumber = phone,
+            EmailConfirmed=false,
+            PhoneNumberConfirmed=false,
         };
 
         var order = _db.Orders

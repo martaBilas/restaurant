@@ -1,4 +1,5 @@
 ﻿using Domain.Enums;
+using Domain.Idenity;
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain;
@@ -10,7 +11,7 @@ public class Order
 
     public Guid AnonId { get; set; }
     public virtual ICollection<OrderRow>? OrderRows { get; set; }
-    public virtual Customer? Customer { get; set; }
+    public virtual AppUser? Customer { get; set; }
     public bool IsPaid { get; set; }
     public PaymentType PaymentType { get; set; }
     public double Total
