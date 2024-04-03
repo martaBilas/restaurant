@@ -2,12 +2,14 @@ import React from "react";
 import { Row, Col, Button, Form, FloatingLabel } from "react-bootstrap";
 import { Formik } from "formik";
 
-import validationSchema from "../UIElements/validationSchema";
+import { ValidationSchema } from "../UIElements/validationSchema";
 
 const CustomerInfoForm = ({ handleFormSubmit, isCart }) => {
+  let isPasswordRequired = !isCart;
+  const schema = ValidationSchema(isPasswordRequired);
   return (
     <Formik
-      validationSchema={validationSchema}
+      validationSchema={schema}
       initialValues={{
         name: "",
         surname: "",
@@ -16,9 +18,10 @@ const CustomerInfoForm = ({ handleFormSubmit, isCart }) => {
         email: "",
         paymentType: "",
         additionInfo: "",
-        password: "",
+        ...(isPasswordRequired ? { password: "" } : {}),
       }}
       onSubmit={(values) => {
+        console.log("i am submit");
         handleFormSubmit(values);
       }}
     >

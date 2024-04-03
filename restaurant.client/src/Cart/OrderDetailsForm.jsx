@@ -8,8 +8,6 @@ import CustomerInfoForm from "../UIElements/CustomerInfoForm";
 
 const OrderDetailsForm = (props) => {
   const handleOrderSubmit = async (values) => {
-    event.preventDefault();
-    event.stopPropagation();
     try {
       const model = {
         name: values.name,
