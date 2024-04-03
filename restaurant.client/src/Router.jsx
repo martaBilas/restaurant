@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 import Layout from './Layout/Layout.jsx'
-import SignIn from './User/Pages/SignIn.jsx';
+import LogIn from './User/Pages/LogIn.jsx';
 import SignUp from "./User/Pages/SingUp.jsx";
 import Home from './Pages/Home.jsx';
 import Cart from './Pages/Cart.jsx';
@@ -15,8 +15,8 @@ const Router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: '/signIn',
-        element: <SignIn />,
+        path: '/LogIn',
+        element: <LogIn />,
       },
       {
         path: '/signUp',

@@ -5,6 +5,7 @@ import UserLineIcon from "remixicon-react/UserLineIcon";
 import ShoppingCartLineIcon from "remixicon-react/ShoppingCartLineIcon";
 import "./HeaderNavLinks.css";
 import Cart from "../Pages/Cart";
+import AuthDraw from "../Pages/AuthDraw";
 
 const HeaderNavLinks = () => {
   const [showCart, setShowCart] = useState(false);
@@ -15,14 +16,29 @@ const HeaderNavLinks = () => {
     setShowCart(false);
   };
 
+  const [showAuth, setShowAuth] = useState(false);
+  const openAuthHandler = () => {
+    setShowAuth(true);
+  };
+  const closeAuthHandler = () => {
+    setShowAuth(false);
+  };
+
   return (
     <React.Fragment>
-      {showCart &&
-      <Cart
-        openCartHandler={openCartHandler}
-        closeCartHandler={closeCartHandler}
-        showCart={showCart}
-      />}
+      {showCart && (
+        <Cart
+          openCartHandler={openCartHandler}
+          closeCartHandler={closeCartHandler}
+          showCart={showCart}
+        />
+      )}
+      {showAuth && (
+        <AuthDraw
+          closeAuthHandler={closeAuthHandler}
+          showAuth={showAuth}
+        />
+      )}
       <ul>
         <li>
           <NavLink to="/">Menu</NavLink>
@@ -30,13 +46,13 @@ const HeaderNavLinks = () => {
         <li>
           <NavLink to="/contactInfo">Info</NavLink>
         </li>
-      {/*   <li>
+        {/*   <li>
           <NavLink to="/deliveryInfo">Delivery</NavLink>
         </li> */}
         <li>
-          <NavLink to="/signIn">
+          <Link onClick={openAuthHandler}>
             <UserLineIcon />
-          </NavLink>
+          </Link>
         </li>
         <li>
           <Link onClick={openCartHandler}>
