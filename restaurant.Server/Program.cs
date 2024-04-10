@@ -43,6 +43,7 @@ builder.Services.AddScoped<IMealImportService, MealImportService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IOrderService,OrderService>();
 builder.Services.AddScoped<IAnonCustomerService,AnonCustomerService>();
+builder.Services.AddScoped<IUserService,UserService>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(opt =>
 {
