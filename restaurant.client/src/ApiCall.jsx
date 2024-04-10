@@ -127,3 +127,21 @@ export const placeOrder = async (placeOrderModel) => {
     console.error("Error place order:" + error);
   }
 };
+
+export const logIn = async (logInModel) => {
+  try {
+    const response = await axios.post(
+      `${BASE_URL}User/signIn`,
+      JSON.stringify(logInModel),
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true,
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error("Error during sign in:", error);
+  }
+};

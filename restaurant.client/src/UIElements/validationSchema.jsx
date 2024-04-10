@@ -20,4 +20,11 @@ export const ValidationSchema = (isPasswordRequired) => {
   });
 };
 
+export const SignInValidationSchema = () => {
+  return yup.object({
+    email: yup.string().email("Invalid email address").required("Email is required"),
+    password: yup.string().required("Password is required"),
+  });
+};
+
 export default ValidationSchema;

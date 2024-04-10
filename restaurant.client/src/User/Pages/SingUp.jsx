@@ -6,9 +6,19 @@ import "./SignUp.css";
 import CustomerInfoForm from "../../UIElements/CustomerInfoForm";
 
 const SingUp = () => {
-  const isCart=false
+  const isCart = false;
   return (
-   <CustomerInfoForm isCart={isCart}/>
+    <>
+      <Row className="d-flex justify-content-center pt-1">
+        <Image
+          src="src\assets\img\login.png"
+          alt="img"
+          fluid
+          className="authDraw-img"
+        />
+      </Row>
+      <CustomerInfoForm isCart={isCart} />
+    </>
   );
 };
 

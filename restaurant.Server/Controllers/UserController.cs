@@ -29,7 +29,7 @@ public class UserController : ControllerBase
             return BadRequest(result);
     }
 
-    [HttpGet("signIn")]
+    [HttpPost("signIn")]
     public async Task<IActionResult> SignIn(SignInModel model)
     {
         var result = await _userService.SignInAsync(model.Email, model.Password);
