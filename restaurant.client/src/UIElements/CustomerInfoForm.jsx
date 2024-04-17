@@ -135,7 +135,7 @@ const CustomerInfoForm = ({ handleFormSubmit, isCart }) => {
               <Col>
                 <FloatingLabel label="password">
                   <Form.Control
-                    type="text"
+                    type="password"
                     className="custom-input"
                     placeholder="password"
                     name="password"

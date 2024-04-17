@@ -1,9 +1,9 @@
 import React from "react";
 import { Row, Col, Button, Form, FloatingLabel, Image } from "react-bootstrap";
 import { Formik } from "formik";
-import { SignInValidationSchema } from "../../UIElements/validationSchema";
+import { SignInValidationSchema } from "../UIElements/validationSchema";
 
-import { logIn } from "../../ApiCall";
+import { logIn } from "../ApiCall";
 import { useAuth } from "./AuthContext";
 
 const LogIn = () => {

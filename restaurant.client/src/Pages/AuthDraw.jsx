@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Offcanvas } from "react-bootstrap";
 
 import "./AuthDraw.css";
-import SingUp from "../User/Pages/SingUp";
-import LogIn from "../User/Pages/LogIn";
-import UserAccount from "../User/Pages/UserAccount";
-import { useAuth } from "../User/Pages/AuthContext";
+import SingUp from "../User/SingUp";
+import LogIn from "../User/LogIn";
+import UserAccount from "../User/UserAccount";
+import { useAuth } from "../User/AuthContext";
 
 const AuthDraw = (props) => {
   const [currentComponent, setCurrentComponent] = useState(1);
@@ -18,6 +18,9 @@ const AuthDraw = (props) => {
   useEffect(() => {
     if (isAuthenticated) {
       setCurrentComponent(2);
+    }
+    else{
+      setCurrentComponent(1)
     }
   }, [isAuthenticated]);
 
@@ -33,7 +36,7 @@ const AuthDraw = (props) => {
       case 1:
         return <h2 className="authDraw-title">Log In</h2>;
       case 2:
-        return <h2>My account</h2>;
+        return <h2 className="authDraw-title pt-2 ps-2">My account</h2>;
       default:
         return null;
     }

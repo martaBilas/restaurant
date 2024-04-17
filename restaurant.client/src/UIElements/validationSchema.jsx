@@ -10,13 +10,14 @@ const baseSchema = {
     .matches(/^\d+$/, "Phone must contain only numbers")
     .max(13, "Phone number must be at most 13 characters long"),
   email: yup.string().email("Invalid email address").required("Email is required"),
-  paymentType: yup.string().required("Please select an option"),
 };
 
 export const ValidationSchema = (isPasswordRequired) => {
   return yup.object({
     ...baseSchema,
-    ...(isPasswordRequired ? { password: yup.string().min(8, "Password must be at least 8 characters").required("Password is required") } : {}),
+    ...(isPasswordRequired 
+      ? { password: yup.string().min(8, "Password must be at least 8 characters").required("Password is required") } 
+      : { paymentType: yup.string().required("Please select an option") }),
   });
 };
 
