@@ -7,5 +7,5 @@ public interface IUserService
 {
     Task<IdentityResult> CreateUserAsync(string address, string email, string firstName, string lastName, string phoneNumber, string password, string roleName);
     Task<bool> LogOutAsync();
-    Task<SignInResult> SignInAsync(string email, string password);
+    Task<(UserInfoModel, string)> SignInAsync(string email, string password);
 }

@@ -1,7 +1,6 @@
 ﻿using Domain.Idenity;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Services
@@ -47,25 +46,33 @@ namespace Infrastructure.Services
             return result;
         }
 
-        public async Task<SignInResult> SignInAsync(string email, string password)
+        public async Task<(UserInfoModel, string)> SignInAsync(string email, string password)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                return SignInResult.Failed;
+                return (null, "There is no such user.");
             }
 
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
-                return SignInResult.NotAllowed;
+                return (null, "There is no such user.");
             }
             var rememberMe = true;
 
             var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, lockoutOnFailure: false);
             if (result.Succeeded)
-                return result;
+                return( new UserInfoModel
+                {
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Address = user.Address,
+                    PhoneNumber = user.PhoneNumber
+                }, "Success");
             else
-                return SignInResult.Failed;
+                return (null, "Email or password is not correct.");
+           
         }
 
         public async Task<bool> LogOutAsync()

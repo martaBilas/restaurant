@@ -17,7 +17,7 @@ const LogIn = () => {
       const response = await logIn(model);
       if (response.status === 200) {
         console.log("sign in success");
-        login(values.email);
+        login(response.data);
       }
     } catch (error) {
       console.error("Sign in failed" + error);

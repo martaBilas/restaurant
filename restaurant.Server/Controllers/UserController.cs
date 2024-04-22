@@ -32,12 +32,13 @@ public class UserController : ControllerBase
     [HttpPost("signIn")]
     public async Task<IActionResult> SignIn(SignInModel model)
     {
-        var result = await _userService.SignInAsync(model.Email, model.Password);
-        if (result.Succeeded)
-            return Ok(result);
+        var (user, message) = await _userService.SignInAsync(model.Email, model.Password);
+        if (user != null)
+            return Ok(user);
         else
-            return BadRequest(result);
+            return BadRequest(new { message = message });
     }
+
 
     [HttpGet("logOut")]
     public async Task<IActionResult> LogOut()
