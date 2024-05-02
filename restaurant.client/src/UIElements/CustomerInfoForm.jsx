@@ -2,20 +2,22 @@ import React from "react";
 import { Row, Col, Button, Form, FloatingLabel } from "react-bootstrap";
 import { Formik } from "formik";
 
+import { useAuth } from "../User/AuthContext";
 import { ValidationSchema } from "../UIElements/validationSchema";
 
 const CustomerInfoForm = ({ handleFormSubmit, isCart }) => {
+  const { user } = useAuth();
   let isPasswordRequired = !isCart;
   const schema = ValidationSchema(isPasswordRequired);
   return (
     <Formik
       validationSchema={schema}
       initialValues={{
-        name: "",
-        surname: "",
-        address: "",
-        phone: "",
-        email: "",
+        name: user?.firstName || "",
+        surname: user?.lastName || "",
+        address: user?.address || "",
+        phone: user?.phoneNumber || "",
+        email: user?.email || "",
         paymentType: "",
         additionInfo: "",
         ...(isPasswordRequired ? { password: "" } : {}),

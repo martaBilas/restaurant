@@ -142,7 +142,16 @@ export const logIn = async (logInModel) => {
     );
     return response;
   } catch (error) {
-    console.error("Error during sign in:", error);
+    if (error.response) {
+
+      console.error("Error during sign in:", error.response.data.message);
+  } else if (error.request) {
+  
+      console.error("No response received:", error.message);
+  } else {
+    
+      console.error("Error", error.message);
+  }
   }
 };
 export const signUp = async (createUserModel) => {

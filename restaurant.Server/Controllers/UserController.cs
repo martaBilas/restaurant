@@ -36,7 +36,7 @@ public class UserController : ControllerBase
         if (user != null)
             return Ok(user);
         else
-            return BadRequest(new { message = message });
+            return Ok(new { message = message });
     }
 
 

@@ -1,5 +1,13 @@
-import React from "react";
-import { Row, Col, Button, Form, FloatingLabel, Image } from "react-bootstrap";
+import { React, useState } from "react";
+import {
+  Row,
+  Col,
+  Button,
+  Form,
+  FloatingLabel,
+  Image,
+  Alert,
+} from "react-bootstrap";
 import { Formik } from "formik";
 import { SignInValidationSchema } from "../UIElements/validationSchema";
 
@@ -8,6 +16,8 @@ import { useAuth } from "./AuthContext";
 
 const LogIn = () => {
   const { login } = useAuth();
+  const [error, setError] = useState(null);
+
   const handleLogInSubmit = async (values) => {
     try {
       const model = {
@@ -16,8 +26,12 @@ const LogIn = () => {
       };
       const response = await logIn(model);
       if (response.status === 200) {
-        console.log("sign in success");
-        login(response.data);
+        if (response.data.message) {
+          setError(response.data.message);
+        } else {
+          console.log("sign in success");
+          login(response.data);
+        }
       }
     } catch (error) {
       console.error("Sign in failed" + error);
@@ -79,6 +93,17 @@ const LogIn = () => {
                 </FloatingLabel>
               </Col>
             </Row>
+            {error && (
+              <Row className="pt-3">
+                <Col className="text-danger">
+                  <i
+                    class="fa-solid fa-circle-exclamation fa-sm pe-2"
+                    style={{ color: '#dc3545' }}
+                  ></i> 
+                    {error}
+                </Col>
+              </Row>
+            )}
             <Row className=" mt-5 pt-2">
               <Col className="d-flex justify-content-center">
                 <Button type="submit" className="signUp-btn" size="md">
