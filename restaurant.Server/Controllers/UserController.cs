@@ -56,5 +56,19 @@ public class UserController : ControllerBase
             return StatusCode(500, new { error = "An unexpected error occurred." });
         }
     }
+
+    [HttpGet("{email}", Name = "GetUserOrders")]
+    public async Task<IActionResult> GetUserPaidOrders(string email)
+    {
+        try
+        {
+            var userOrders = await _userService.GetUserOrdersByEmail(email);
+            return Ok(userOrders);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }
   

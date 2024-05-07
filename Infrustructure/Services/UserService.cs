@@ -1,124 +1,165 @@
-﻿using Domain.Idenity;
+﻿using DataContext;
+using Domain;
+using Domain.Idenity;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Services
+namespace Infrastructure.Services;
+
+public class UserService : IUserService
 {
-    public class UserService : IUserService
+    private readonly UserManager<AppUser> _userManager;
+    private readonly SignInManager<AppUser> _signInManager;
+    private readonly RoleManager<AppRole> _roleManager;
+    private readonly RestaurantDataContext _db;
+
+    public UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, RestaurantDataContext db)
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
-        private readonly RoleManager<AppRole> _roleManager;
-
-        public UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager)
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _roleManager = roleManager;
+        _db = db;
+    }
+    public async Task<IdentityResult> CreateUserAsync(string address, string email, string firstName, string lastName, string phoneNumber, string password, string roleName)
+    {
+        var existingUser = await _userManager.FindByEmailAsync(email);
+        if (existingUser != null)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _roleManager = roleManager;
+            return IdentityResult.Failed(new IdentityError { Description = "There is user with such email." });
         }
-        public async Task<IdentityResult> CreateUserAsync(string address, string email, string firstName, string lastName, string phoneNumber, string password, string roleName)
+        var user = new AppUser
         {
-            var existingUser = await _userManager.FindByEmailAsync(email);
-            if (existingUser != null)
-            {
-                return IdentityResult.Failed(new IdentityError { Description = "There is user with such email." });
-            }
-            var user = new AppUser
-            {
-                Address = address,
-                Email = email,
-                FirstName = firstName,
-                LastName = lastName,
-                PhoneNumber = phoneNumber,
-                EmailConfirmed = true,
-                UserName = email,
-            };
-            var result = await _userManager.CreateAsync(user, password);
-            if (result.Succeeded)
-            {
-                var roleExists = await _roleManager.RoleExistsAsync(roleName);
-                if (roleExists)
-                {
-                    await _userManager.AddToRoleAsync(user, roleName);
-                }
-            }
-            return result;
-        }
-
-        public async Task<(UserInfoModel, string)> SignInAsync(string email, string password)
+            Address = address,
+            Email = email,
+            FirstName = firstName,
+            LastName = lastName,
+            PhoneNumber = phoneNumber,
+            EmailConfirmed = true,
+            UserName = email,
+        };
+        var result = await _userManager.CreateAsync(user, password);
+        if (result.Succeeded)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
+            var roleExists = await _roleManager.RoleExistsAsync(roleName);
+            if (roleExists)
             {
-                return (null, "There is no such user.");
-            }
-
-            if (!await _userManager.IsEmailConfirmedAsync(user))
-            {
-                return (null, "There is no such user.");
-            }
-            var rememberMe = true;
-
-            var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, lockoutOnFailure: false);
-            if (result.Succeeded)
-                return( new UserInfoModel
-                {
-                    Email = user.Email,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Address = user.Address,
-                    PhoneNumber = user.PhoneNumber
-                }, "Success");
-            else
-                return (null, "Email or password is not correct.");
-           
-        }
-
-        public async Task<bool> LogOutAsync()
-        {
-            try
-            {
-                await _signInManager.SignOutAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                await _userManager.AddToRoleAsync(user, roleName);
             }
         }
-        public async Task<IdentityResult> DeleteUserAsync(string email)
+        return result;
+    }
+
+    public async Task<(UserInfoModel, string)> SignInAsync(string email, string password)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                return IdentityResult.Failed(new IdentityError { Description = $"User with email {email} does not exist." });
-            }
-
-            var result = await _userManager.DeleteAsync(user);
-            return result;
+            return (null, "There is no such user.");
         }
-        public async Task<IdentityResult> UpdateUserAsync(string email, string newEmail = null, string newPhoneNumber = null)
+
+        if (!await _userManager.IsEmailConfirmedAsync(user))
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                return IdentityResult.Failed(new IdentityError { Description = $"User with email {email} does not exist." });
-            }
-
-            if (!string.IsNullOrEmpty(newEmail))
-            {
-                user.Email = newEmail;
-            }
-
-            if (!string.IsNullOrEmpty(newPhoneNumber))
-            {
-                user.PhoneNumber = newPhoneNumber;
-            }
-
-            var result = await _userManager.UpdateAsync(user);
-            return result;
+            return (null, "There is no such user.");
         }
+        var rememberMe = true;
+
+        var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, lockoutOnFailure: false);
+        if (result.Succeeded)
+            return (new UserInfoModel
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address = user.Address,
+                PhoneNumber = user.PhoneNumber
+            }, "Success");
+        else
+            return (null, "Email or password is not correct.");
 
     }
+
+    public async Task<bool> LogOutAsync()
+    {
+        try
+        {
+            await _signInManager.SignOutAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    public async Task<IdentityResult> DeleteUserAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return IdentityResult.Failed(new IdentityError { Description = $"User with email {email} does not exist." });
+        }
+
+        var result = await _userManager.DeleteAsync(user);
+        return result;
+    }
+    public async Task<IdentityResult> UpdateUserAsync(string email, string newEmail = null, string newPhoneNumber = null)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return IdentityResult.Failed(new IdentityError { Description = $"User with email {email} does not exist." });
+        }
+
+        if (!string.IsNullOrEmpty(newEmail))
+        {
+            user.Email = newEmail;
+        }
+
+        if (!string.IsNullOrEmpty(newPhoneNumber))
+        {
+            user.PhoneNumber = newPhoneNumber;
+        }
+
+        var result = await _userManager.UpdateAsync(user);
+        return result;
+    }
+    public async Task<UserOrdersModel> GetUserOrdersByEmail(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        var orders = _db.Orders?
+              .Include(o => o.OrderRows)
+              .ThenInclude(o => o.Meal)
+              .Where(o => o.Customer.Email == email && o.IsPaid == true)
+              .OrderBy(o => o.Id)
+              .ToList();
+
+
+        if (orders.Count() == 0)
+        {
+            return new UserOrdersModel();
+        }
+
+        var userOrders = new UserOrdersModel
+        {
+            Orders = orders.Select(o => new OrderModel
+            {
+                Id = o.Id,
+                OrderRows = o.OrderRows.Select(or => new OrderRowModel
+                {
+                    Id = or.Id,
+                    MealName = or.Meal.Name,
+                    Weight = or.Meal.Weight,
+                    ImageUrl = or.Meal.ImageUrl,
+                    Price = or.Price,
+                    Amount = or.Amount
+                })
+            }).ToList()
+        };
+
+        return userOrders;
+    }
 }
+
+
