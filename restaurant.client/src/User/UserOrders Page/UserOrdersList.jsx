@@ -1,83 +1,53 @@
 import React from "react";
 import Accordion from "react-bootstrap/Accordion";
-
+import { useState, useEffect } from "react";
 import UserOrder from "./UserOrder";
-
-const orders = [
-  {
-    id: 35,
-    order_date: "2024-04-13",
-    meals: [
-      {
-        Id: 32,
-        Name: "Breakfast with sun-dried tomatoes and salmon",
-        Amount: 3,
-        ImageUrl:
-          "https://cdn-media.choiceqr.com/prod-eat-salalatpimonenka/menu/cyWDVwK-HbHMYFX-ElDYycd.jpeg",
-        Weight: 340,
-      },
-      {
-        Id: 33,
-        Name: "Cheesecakes with cherries and mascarpone cream",
-        Amount: 2,
-        ImageUrl:
-          "https://cdn-media.choiceqr.com/prod-eat-salalatpimonenka/menu/kDRmqnS-CCVmOqg-XUohCqF.jpeg",
-        Weight: 300,
-      },
-      {
-        Id: 35,
-        Name: "Cheesecakes with cherries and mascarpone cream",
-        Amount: 1,
-        ImageUrl:
-          "https://cdn-media.choiceqr.com/prod-eat-salalatpimonenka/menu/kDRmqnS-CCVmOqg-XUohCqF.jpeg",
-        Weight: 300,
-      },
-    ],
-  },
-  {
-    id: 32,
-    order_date: "2021-04-23",
-    meals: [
-      {
-        Id: 23,
-        Name: "Breakfast with sun-dried tomatoes and salmon",
-        Amount: 3,
-        ImageUrl:
-          "https://cdn-media.choiceqr.com/prod-eat-salalatpimonenka/menu/cyWDVwK-HbHMYFX-ElDYycd.jpeg",
-        Weight: 340,
-      },
-      {
-        Id: 24,
-        Name: "Cheesecakes with cherries and mascarpone cream",
-        Amount: 2,
-        ImageUrl:
-          "https://cdn-media.choiceqr.com/prod-eat-salalatpimonenka/menu/kDRmqnS-CCVmOqg-XUohCqF.jpeg",
-        Weight: 300,
-      },
-      {
-        Id: 25,
-        Name: "Cheesecakes with cherries and mascarpone cream",
-        Amount: 5,
-        ImageUrl:
-          "https://cdn-media.choiceqr.com/prod-eat-salalatpimonenka/menu/kDRmqnS-CCVmOqg-XUohCqF.jpeg",
-        Weight: 300,
-      },
-    ],
-  },
-];
+import { getUserOrdersByEmail } from "../../ApiCall";
+import { useAuth } from "../AuthContext";
 
 const UserOrdersList = () => {
+  const { user } = useAuth();
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await getUserOrdersByEmail(user.email);
+        setOrders(response.data.orders);
+      } catch (error) {
+        console.error("Error during fetching user orders:", error);
+      }
+    };
+
+    fetchOrders();
+  }, [user]);
+
   return (
-    <Accordion className="pb-3">
-      {orders.map((order) => (
-        <Accordion.Item eventKey={order.id}>
-          <Accordion.Header>Order #{order.id}</Accordion.Header>
-          <Accordion.Body>
-            <UserOrder order={order}/>
-          </Accordion.Body>
-        </Accordion.Item>
-      ))}
-    </Accordion>
+    <>
+      {orders.length > 0 ? (
+        <Accordion className="pb-3">
+          {orders.map((order) => (
+            <Accordion.Item key={order.id} eventKey={order.id}>
+              <Accordion.Header>Order #{order.id}</Accordion.Header>
+              <Accordion.Body>
+                <UserOrder order={order} />
+              </Accordion.Body>
+            </Accordion.Item>
+          ))}
+        </Accordion>
+      ) : (
+        <Row className=" d-block justify-content-center align-items-center">
+          <Col className="text-center fs-3">
+            <div class="text-center fs-3 ratio ratio-16x9 ">
+              <iframe src="https://lottie.host/embed/b9a47eca-0388-418f-8452-d0a25dd18f04/aKpfql0W1K.json"></iframe>
+            </div>
+          </Col>
+          <Col className="text-center fs-4">
+            <strong> You haven't ordered anything yet. </strong>
+          </Col>
+        </Row>
+      )}
+    </>
   );
 };
 

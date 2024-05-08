@@ -182,3 +182,15 @@ export const logOut = async () => {
     console.error("Error during log out:", error);
   }
 };
+
+export const getUserOrdersByEmail = async (userEmail)=>{
+  try {
+    const response = await axios.get(`${BASE_URL}User/${userEmail}`, {
+      withCredentials: true,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error during fetching user orders:", error);
+  }
+  
+}
