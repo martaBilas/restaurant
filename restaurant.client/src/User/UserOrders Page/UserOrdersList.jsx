@@ -1,6 +1,8 @@
 import React from "react";
 import Accordion from "react-bootstrap/Accordion";
+import { Row, Col } from "react-bootstrap";
 import { useState, useEffect } from "react";
+
 import UserOrder from "./UserOrder";
 import { getUserOrdersByEmail } from "../../ApiCall";
 import { useAuth } from "../AuthContext";

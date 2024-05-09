@@ -51,6 +51,9 @@ export const orderReducer = (state, action) => {
         return state;
       }
     }
+    case "clear": {
+      return { meals: [], total: 0 };
+    }
     default: {
       throw Error("Unknown action: " + action.type);
     }

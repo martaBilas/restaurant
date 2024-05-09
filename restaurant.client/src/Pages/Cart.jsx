@@ -7,12 +7,15 @@ import Order from "../Cart/Order";
 import ConfirmedOrder from "../Cart/ConfirmedOrder";
 import EmptyCart from "../Cart/EmptyCart";
 import { useOrder } from "../Cart/OrderContext";
+import { useOrderDispatch } from "../Cart/OrderContext";
 
 const Cart = (props) => {
+  const dispatch = useOrderDispatch();
   const order = useOrder();
   const meals = order.meals;
 
   const [currentComponent, setCurrentComponent] = useState(0);
+  const [isOrderPlaced, setIsOrderPlaced] = useState(false);
 
   const setCurrentComponentHandler = () => {
     if (meals.length === 0) {
@@ -42,7 +45,7 @@ const Cart = (props) => {
         return <Order handleNextButtonClick={handleNextButtonClick} />;
       case 2:
         return (
-          <OrderDetailsForm handleNextButtonClick={handleNextButtonClick} />
+          <OrderDetailsForm handleNextButtonClick={handleNextButtonClick} handleOrderPlacing={setIsOrderPlaced} />
         );
       case 3:
         return <ConfirmedOrder />;
@@ -69,11 +72,19 @@ const Cart = (props) => {
     }
   };
 
+  const closeCartHandler = () => {
+    props.closeCartHandler();
+    if (isOrderPlaced) {
+      dispatch({ type: "clear"}); 
+      setIsOrderPlaced(false); 
+    }
+  };
+
   return (
     <Offcanvas
       placement="end"
       show={props.showCart}
-      onHide={props.closeCartHandler}
+      onHide={closeCartHandler}
       className="custom-offcanvas d-flex flex-column justify-content-between"
       backdropClassName="custom-offcanvas-backdrop"
     >
