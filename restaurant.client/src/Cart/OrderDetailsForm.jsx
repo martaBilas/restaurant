@@ -29,7 +29,7 @@ const OrderDetailsForm = (props) => {
   return (
     <>
       <p className="fs-4 pt-0">Confirm order:</p>
-      <div>
+    {/*   <div>
         <span className="mr-2">Maybe you already have an account? </span>
         <Link
           to="/login"
@@ -37,8 +37,8 @@ const OrderDetailsForm = (props) => {
           onClick={handleLogInClick}
         >
           (log in)
-        </Link>
-      </div>
+        </Link> 
+      </div>*/}
       <CustomerInfoForm handleFormSubmit={handleOrderSubmit} isCart={isCart} />
     </>
   );
