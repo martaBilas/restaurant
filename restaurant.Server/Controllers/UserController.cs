@@ -2,8 +2,10 @@
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Cryptography.Xml;
 
 namespace restaurant.Server.Controllers;
 
@@ -43,7 +45,8 @@ public class UserController : ControllerBase
     [HttpGet("logOut")]
     public async Task<IActionResult> LogOut()
     {
-        try {
+        try
+        {
             var result = await _userService.LogOutAsync();
 
             if (result)
@@ -52,7 +55,8 @@ public class UserController : ControllerBase
                 return StatusCode(500, new { error = "Logout failed." });
 
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             return StatusCode(500, new { error = "An unexpected error occurred." });
         }
     }
@@ -70,5 +74,31 @@ public class UserController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPut("UpdateUserInfo")]
+    public async Task<IActionResult> UpdateUserInfoAsync([FromBody] UpdateUserInfoModel newInfo)
+    {
+        var result = await _userService.UpdateUserInfoAsync(newInfo.Email, newInfo.NewEmail, newInfo.PhoneNumber, newInfo.FirstName, newInfo.LastName, newInfo.Address);
+
+        if (result.Succeeded)
+        {
+            return Ok();
+        }
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpPut("UpdateUserPassword")]
+    public async Task<IActionResult> UpdatePasswordAsync([FromBody] UpdateUserPasswordModel model)
+    {
+        IdentityResult result = await _userService.UpdateUserPasswordAsync(model.Email, model.OldPassword, model.NewPassword);
+
+        if (result.Succeeded)
+        {
+            return Ok();
+        }
+
+        return BadRequest(result.Errors);
+    }
 }
-  
+

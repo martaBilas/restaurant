@@ -3,16 +3,24 @@ import { Row, Col, Button, Form, FloatingLabel } from "react-bootstrap";
 import { Formik } from "formik";
 
 import { useAuth } from "../User/AuthContext";
-import { ValidationSchema } from "../UIElements/validationSchema";
+import {
+  CartValidationSchema,
+  SignUpValidationSchema,
+  UserInfoValidationSchema,
+} from "../UIElements/validationSchema";
+import { OrderDetailsFormFields } from "../Cart/OrderDetailsFormFields";
+import { UserInfoFields } from "../User/UserInfoFields";
 
-const CustomerInfoForm = ({ handleFormSubmit, isCart }) => {
+const CustomerInfoForm = ({ handleFormSubmit, componentType }) => {
   const { user } = useAuth();
-  let isPasswordRequired = !isCart;
-  const schema = ValidationSchema(isPasswordRequired);
-  return (
-    <Formik
-      validationSchema={schema}
-      initialValues={{
+
+  let schema;
+  let initialValues;
+
+  switch (componentType) {
+    case "cart":
+      schema = CartValidationSchema;
+      initialValues = {
         name: user?.firstName || "",
         surname: user?.lastName || "",
         address: user?.address || "",
@@ -20,14 +28,43 @@ const CustomerInfoForm = ({ handleFormSubmit, isCart }) => {
         email: user?.email || "",
         paymentType: "",
         additionInfo: "",
-        ...(isPasswordRequired ? { password: "" } : {}),
-      }}
+      };
+      break;
+    case "signUp":
+      schema = SignUpValidationSchema;
+      initialValues = {
+        name: user?.firstName || "",
+        surname: user?.lastName || "",
+        address: user?.address || "",
+        phone: user?.phoneNumber || "",
+        email: user?.email || "",
+        password: "",
+      };
+      break;
+    case "userInfo":
+      schema = UserInfoValidationSchema;
+      initialValues = {
+        name: user?.firstName || "",
+        surname: user?.lastName || "",
+        address: user?.address || "",
+        phone: user?.phoneNumber || "",
+        email: user?.email || "",
+        password: "",
+        newPassword: "",
+        confirmedNewPassword: "",
+      };
+      break;
+    default:
+  }
+  return (
+    <Formik
+      validationSchema={schema}
+      initialValues={initialValues}
       onSubmit={(values) => {
-        console.log("i am submit");
         handleFormSubmit(values);
       }}
     >
-      {({ handleSubmit, handleChange, values, touched, errors }) => (
+      {({ handleSubmit, handleChange, values, errors }) => (
         <Form noValidate onSubmit={handleSubmit}>
           <Row className="pt-3">
             <Col>
@@ -114,7 +151,7 @@ const CustomerInfoForm = ({ handleFormSubmit, isCart }) => {
                 </Form.Control.Feedback>
               </FloatingLabel>
             </Col>
-            {isCart ? (
+            {componentType === "cart" ? (
               <Col>
                 <Form.Select
                   aria-label="Default select example"
@@ -152,24 +189,20 @@ const CustomerInfoForm = ({ handleFormSubmit, isCart }) => {
               </Col>
             )}
           </Row>
-          {isCart && (
-            <Row className="pt-4">
-              <Col>
-                <Form.Label className="fs-6 ps-1">
-                  Here you can add some comments to your order if you like to:
-                </Form.Label>
-                <Form.Control
-                  as="textarea"
-                  placeholder="Comment to your order"
-                  name="additionInfo"
-                  value={values.additionInfo}
-                  onChange={handleChange}
-                  rows={5}
-                />
-              </Col>
-            </Row>
+          {componentType === "cart" && (
+            <OrderDetailsFormFields
+              handleChange={handleChange}
+              values={values}
+            />
           )}
-          {isCart ? (
+          {componentType === "userInfo" && (
+            <UserInfoFields
+              handleChange={handleChange}
+              values={values}
+              errors={errors}
+            />
+          )}
+          {componentType === "cart" ? (
             <Row className=" mt-5 pt-5">
               <Col className="d-flex justify-content-end">
                 <Button type="submit" className="cartNext-but" size="md">

@@ -103,7 +103,7 @@ public class UserService : IUserService
         var result = await _userManager.DeleteAsync(user);
         return result;
     }
-    public async Task<IdentityResult> UpdateUserAsync(string email, string newEmail = null, string newPhoneNumber = null)
+    public async Task<IdentityResult> UpdateUserInfoAsync(string email, string? newEmail = null, string? newPhoneNumber = null, string? newFirstName = null, string? newLastName = null, string? newAddress = null)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
@@ -121,9 +121,44 @@ public class UserService : IUserService
             user.PhoneNumber = newPhoneNumber;
         }
 
+        if (!string.IsNullOrEmpty(newFirstName))
+        {
+            user.FirstName = newFirstName; 
+        }
+
+        if (!string.IsNullOrEmpty(newLastName))
+        {
+            user.LastName = newLastName; 
+        }
+
+        if (!string.IsNullOrEmpty(newAddress))
+        {
+            user.Address = newAddress; 
+        }
+
         var result = await _userManager.UpdateAsync(user);
         return result;
     }
+
+    public async Task<IdentityResult> UpdateUserPasswordAsync(string email, string oldPassword, string newPassword)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return IdentityResult.Failed(new IdentityError { Description = $"User with email {email} does not exist." });
+        }
+
+        var verifyPassword = await _userManager.CheckPasswordAsync(user, oldPassword);
+        if (!verifyPassword)
+        {
+            return IdentityResult.Failed(new IdentityError { Description = "Old password is not correct." });
+        }
+
+        var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+        return result;
+    }
+
+
     public async Task<UserOrdersModel> GetUserOrdersByEmail(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);

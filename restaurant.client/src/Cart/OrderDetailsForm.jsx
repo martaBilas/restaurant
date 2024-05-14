@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 import { placeOrder } from "../ApiCall";
 import CustomerInfoForm from "../UIElements/CustomerInfoForm";
@@ -25,7 +24,7 @@ const OrderDetailsForm = (props) => {
       console.error("Error placing order:", error);
     }
   };
-  const isCart = true;
+
   return (
     <>
       <p className="fs-4 pt-0">Confirm order:</p>
@@ -39,7 +38,7 @@ const OrderDetailsForm = (props) => {
           (log in)
         </Link> 
       </div>*/}
-      <CustomerInfoForm handleFormSubmit={handleOrderSubmit} isCart={isCart} />
+      <CustomerInfoForm handleFormSubmit={handleOrderSubmit} componentType={"cart"} />
     </>
   );
 };

@@ -9,4 +9,6 @@ public interface IUserService
     Task<UserOrdersModel> GetUserOrdersByEmail(string email);
     Task<bool> LogOutAsync();
     Task<(UserInfoModel, string)> SignInAsync(string email, string password);
+    Task<IdentityResult> UpdateUserInfoAsync(string email, string? newEmail = null, string? newPhoneNumber = null, string? newFirstName = null, string? newLastName = null, string? newAddress = null);
+    Task<IdentityResult> UpdateUserPasswordAsync(string email, string oldPassword, string newPassword);
 }

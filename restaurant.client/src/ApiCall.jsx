@@ -143,15 +143,12 @@ export const logIn = async (logInModel) => {
     return response;
   } catch (error) {
     if (error.response) {
-
       console.error("Error during sign in:", error.response.data.message);
-  } else if (error.request) {
-  
+    } else if (error.request) {
       console.error("No response received:", error.message);
-  } else {
-    
+    } else {
       console.error("Error", error.message);
-  }
+    }
   }
 };
 export const signUp = async (createUserModel) => {
@@ -183,7 +180,7 @@ export const logOut = async () => {
   }
 };
 
-export const getUserOrdersByEmail = async (userEmail)=>{
+export const getUserOrdersByEmail = async (userEmail) => {
   try {
     const response = await axios.get(`${BASE_URL}User/${userEmail}`, {
       withCredentials: true,
@@ -192,5 +189,24 @@ export const getUserOrdersByEmail = async (userEmail)=>{
   } catch (error) {
     console.error("Error during fetching user orders:", error);
   }
-  
-}
+};
+
+export const updateUserInfo = async (newInfo) => {
+  try {
+    const response = await axios.put(`${BASE_URL}User/UpdateUserInfo`, newInfo );
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating user info: ${error}`);
+    throw error;
+  }
+};
+
+export const updateUserPassword = async (newInfo) => {
+  try {
+    const response = await axios.put(`${BASE_URL}User/UpdateUserPassword`, newInfo );
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating user password: ${error}`);
+    throw error;
+  }
+};
