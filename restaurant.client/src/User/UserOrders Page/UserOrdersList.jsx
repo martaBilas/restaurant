@@ -26,7 +26,7 @@ const UserOrdersList = () => {
 
   return (
     <>
-      {orders.length > 0 ? (
+      {orders && orders.length > 0 ? (
         <Accordion className="pb-3">
           {orders.map((order) => (
             <Accordion.Item key={order.id} eventKey={order.id}>

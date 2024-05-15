@@ -6,37 +6,13 @@ import {
   Form,
   FloatingLabel,
   Image,
-  Alert,
 } from "react-bootstrap";
 import { Formik } from "formik";
 import { SignInValidationSchema } from "../UIElements/validationSchema";
 
-import { logIn } from "../ApiCall";
-import { useAuth } from "./AuthContext";
 
-const LogIn = () => {
-  const { login } = useAuth();
-  const [error, setError] = useState(null);
+const LogIn = ({handleLogIn, errorMessage}) => {
 
-  const handleLogInSubmit = async (values) => {
-    try {
-      const model = {
-        email: values.email,
-        password: values.password,
-      };
-      const response = await logIn(model);
-      if (response.status === 200) {
-        if (response.data.message) {
-          setError(response.data.message);
-        } else {
-          console.log("sign in success");
-          login(response.data);
-        }
-      }
-    } catch (error) {
-      console.error("Sign in failed" + error);
-    }
-  };
   return (
     <>
       <Row className="d-flex justify-content-center pt-1">
@@ -54,7 +30,7 @@ const LogIn = () => {
           password: "",
         }}
         onSubmit={(values) => {
-          handleLogInSubmit(values);
+          handleLogIn(values.email, values.password);
         }}
       >
         {({ handleSubmit, handleChange, values, errors }) => (
@@ -93,14 +69,14 @@ const LogIn = () => {
                 </FloatingLabel>
               </Col>
             </Row>
-            {error && (
+            {errorMessage && (
               <Row className="pt-3">
                 <Col className="text-danger">
                   <i
                     class="fa-solid fa-circle-exclamation fa-sm pe-2"
                     style={{ color: '#dc3545' }}
                   ></i> 
-                    {error}
+                    {errorMessage}
                 </Col>
               </Row>
             )}

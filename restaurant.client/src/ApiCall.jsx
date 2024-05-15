@@ -128,7 +128,7 @@ export const placeOrder = async (placeOrderModel) => {
   }
 };
 
-export const logIn = async (logInModel) => {
+export const signIn = async (logInModel) => {
   try {
     const response = await axios.post(
       `${BASE_URL}User/signIn`,

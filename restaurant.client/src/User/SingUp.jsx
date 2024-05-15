@@ -1,14 +1,12 @@
-import React from "react";
+import {React, useState} from "react";
 import { Row, Image } from "react-bootstrap";
 
 import "./SignUp.css";
 import { signUp } from "../ApiCall";
 import CustomerInfoForm from "../UIElements/CustomerInfoForm";
-import { useAuth } from "./AuthContext";
 
-const SingUp = () => {
-  const { login } = useAuth();
-  const isCart = false;
+const SingUp = ({handleLogIn}) => {
+  const [errorMessage, setErrorMessage]= useState(null)
   const handleCreateUser = async (values) => {
     try {
       const model = {
@@ -22,9 +20,10 @@ const SingUp = () => {
       const response = await signUp(model);
       if (response.status === 200) {
         console.log("sign up success");
-        login(values.email);
+        handleLogIn(values.email, values.password);
       }
     } catch (error) {
+      setErrorMessage("There is user with such email");
       console.error("Sign up failed" + error);
     }
   };
@@ -38,7 +37,7 @@ const SingUp = () => {
           className="authDraw-img"
         />
       </Row>
-      <CustomerInfoForm handleFormSubmit={handleCreateUser} isCart={isCart} />
+      <CustomerInfoForm handleFormSubmit={handleCreateUser} componentType={"signUp"} errorMessage={errorMessage}/>
     </>
   );
 };

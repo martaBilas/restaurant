@@ -6,12 +6,10 @@ import { useAuth } from "../User/AuthContext";
 import {
   CartValidationSchema,
   SignUpValidationSchema,
-  UserInfoValidationSchema,
 } from "../UIElements/validationSchema";
 import { OrderDetailsFormFields } from "../Cart/OrderDetailsFormFields";
-import { UserInfoFields } from "../User/UserInfoFields";
 
-const CustomerInfoForm = ({ handleFormSubmit, componentType }) => {
+const CustomerInfoForm = ({ handleFormSubmit, componentType, errorMessage }) => {
   const { user } = useAuth();
 
   let schema;
@@ -39,19 +37,6 @@ const CustomerInfoForm = ({ handleFormSubmit, componentType }) => {
         phone: user?.phoneNumber || "",
         email: user?.email || "",
         password: "",
-      };
-      break;
-    case "userInfo":
-      schema = UserInfoValidationSchema;
-      initialValues = {
-        name: user?.firstName || "",
-        surname: user?.lastName || "",
-        address: user?.address || "",
-        phone: user?.phoneNumber || "",
-        email: user?.email || "",
-        password: "",
-        newPassword: "",
-        confirmedNewPassword: "",
       };
       break;
     default:
@@ -202,6 +187,17 @@ const CustomerInfoForm = ({ handleFormSubmit, componentType }) => {
               errors={errors}
             />
           )}
+           {errorMessage && (
+              <Row className="pt-3">
+                <Col className="text-danger">
+                  <i
+                    class="fa-solid fa-circle-exclamation fa-sm pe-2"
+                    style={{ color: '#dc3545' }}
+                  ></i> 
+                    {errorMessage}
+                </Col>
+              </Row>
+            )}
           {componentType === "cart" ? (
             <Row className=" mt-5 pt-5">
               <Col className="d-flex justify-content-end">
@@ -214,7 +210,7 @@ const CustomerInfoForm = ({ handleFormSubmit, componentType }) => {
             <Row className=" mt-5 pt-2">
               <Col className="d-flex justify-content-center">
                 <Button type="submit" className="signUp-btn" size="md">
-                  Submit
+                  Sign up
                 </Button>
               </Col>
             </Row>

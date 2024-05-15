@@ -6,10 +6,12 @@ import SingUp from "../User/SingUp";
 import LogIn from "../User/LogIn";
 import UserAccount from "../User/UserAccount";
 import { useAuth } from "../User/AuthContext";
+import { signIn } from "../ApiCall";
 
 const AuthDraw = (props) => {
   const [currentComponent, setCurrentComponent] = useState(1);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, login } = useAuth();
+  const [error, setError] = useState(null);
 
   const setCurrentComponentHandler = (componentNumber) => {
     setCurrentComponent(componentNumber);
@@ -45,13 +47,33 @@ const AuthDraw = (props) => {
   const renderComponent = () => {
     switch (currentComponent) {
       case 0:
-        return <SingUp />;
+        return <SingUp handleLogIn={handleLogIn}/>;
       case 1:
-        return <LogIn />;
+        return <LogIn handleLogIn={handleLogIn} errorMessage={error}/>;
       case 2:
         return <UserAccount />;
       default:
         return null;
+    }
+  };
+
+  const handleLogIn = async (email, password) => {
+    try {
+      const model = {
+        email: email,
+        password: password,
+      };
+      const response = await signIn(model);
+      if (response.status === 200) {
+        if (response.data.message) {
+          setError(response.data.message);
+        } else {
+          console.log("sign in success");
+          login(response.data);
+        }
+      }
+    } catch (error) {
+      console.error("Sign in failed" + error);
     }
   };
 
@@ -60,7 +82,7 @@ const AuthDraw = (props) => {
       case 0:
         return (
           <div>
-            <span className="mr-2">Maybe you already have an account? </span>
+            <span className="mr-2 ">Maybe you already have an account? </span>
             <a
               className="d-inline fs-8 p-0"
               onClick={() => setCurrentComponentHandler(1)}
