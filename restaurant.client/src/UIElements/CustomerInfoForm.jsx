@@ -7,6 +7,7 @@ import {
   CartValidationSchema,
   SignUpValidationSchema,
 } from "../UIElements/validationSchema";
+import { OrderDetailsFormFields } from "../Cart/OrderDetailsFormFields";
 
 const CustomerInfoForm = ({ handleFormSubmit, componentType, errorMessage }) => {
   const { user } = useAuth();
@@ -177,13 +178,6 @@ const CustomerInfoForm = ({ handleFormSubmit, componentType, errorMessage }) => 
             <OrderDetailsFormFields
               handleChange={handleChange}
               values={values}
-            />
-          )}
-          {componentType === "userInfo" && (
-            <UserInfoFields
-              handleChange={handleChange}
-              values={values}
-              errors={errors}
             />
           )}
            {errorMessage && (
