@@ -136,7 +136,7 @@ const UserInfoForm = () => {
           </Row>
           <Row className="pt-4">
             <Col className="d-flex justify-content-center">
-              <Button type="submit" className="cartNext-but" size="md">
+              <Button type="submit" className="userInfo-submit-but" size="md">
                 Change info
               </Button>
             </Col>

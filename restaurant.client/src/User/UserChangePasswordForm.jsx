@@ -2,6 +2,7 @@ import React from "react";
 import { Row, Col, Button, Form, FloatingLabel } from "react-bootstrap";
 import { Formik } from "formik";
 
+import "./UserInfo.css"
 import { useAuth } from "./AuthContext";
 import { UserPasswordValidationSchema } from "../UIElements/validationSchema";
 import { updateUserPassword } from "../ApiCall";
@@ -95,8 +96,8 @@ const UserChangePasswordForm = () => {
             </Col>
           </Row>
           <Row className=" mt-5 pt-5">
-            <Col className="d-flex justify-content-center">
-              <Button type="submit" className="cartNext-but" size="md">
+            <Col className="d-flex justify-content-center " xs="12">
+              <Button type="submit" className="userInfo-submit-but mt-1" size="md">
                 Change password
               </Button>
             </Col>

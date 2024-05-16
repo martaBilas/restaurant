@@ -114,9 +114,9 @@ const AuthDraw = (props) => {
       onHide={props.closeAuthHandler}
       className="custom-offcanvas d-flex flex-column justify-content-between"
       backdropClassName="custom-offcanvas-backdrop"
-      placement="end"
+      placement="end" 
     >
-      <Offcanvas.Title className="pt-3 ps-3">{renderTitle()}</Offcanvas.Title>
+      <Offcanvas.Header className="pt-3 ps-3" closeButton>{renderTitle()}</Offcanvas.Header>
       <Offcanvas.Body>
         {renderRef()}
         {renderComponent()}
