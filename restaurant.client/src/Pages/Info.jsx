@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Card } from "react-bootstrap";
+import { Row, Col, Card, Image } from "react-bootstrap";
 import { RiBankCardLine, RiCashLine } from "@remixicon/react";
 
 import "./Info.css";
@@ -7,50 +7,100 @@ import "./Info.css";
 const Info = () => {
   return (
     <>
-      <Row className="text-start ps-4">
-        <h3>About Us</h3>
-      </Row>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod eum
-        cupiditate ut quia earum quasi illo error dolor, numquam iusto, sunt
-        fugiat nemo odio. Inventore itaque eaque quisquam harum incidunt!
-      </p>
-      <Row>
-        <h3>Payment</h3>
-      </Row>
-      <Row className="ps-5">
-        <Col className="col-sm-4 mb-3">
-          <Card className="h-100 info-card text-center">
-            <div className="d-flex justify-content-center align-items-center">
-              <RiCashLine size={60} />
-            </div>
-            <Card.Title className="pt-3">
-              Cash payment upon receipt of order
-            </Card.Title>
-            <Card.Body className="d-flex flex-column">
-              <Card.Text>
-                Pay with cash for your food delivery! Select the cash option at
-                checkout, and have exact change ready upon delivery for a
-                hassle-free experience.
-              </Card.Text>
-            </Card.Body>
-          </Card>
+      <Row className="ps-5 ms-5 pt-5">
+        <Col xs="5" className="text-center fs-3 pe-0">
+          <img
+            src="src\assets\img\restaurant_pic.jpeg"
+            alt="img"
+            className="img-fluid ratio ratio-4x3"
+          />
         </Col>
-        <Col className="col-sm-4 mb-3">
-          <Card className="h-100 info-card text-center">
-            <div className="d-flex justify-content-center align-items-center">
-              <RiBankCardLine size={60} />
-            </div>
-            <Card.Title className="pt-3">
-              Cashless payment when placing an order
-            </Card.Title>
-            <Card.Body className="d-flex flex-column">
-              <Card.Text>
-                When meeting with the courier, the managers of the pick-up
-                point, you can simply pay for your order by card and pick up it.
-              </Card.Text>
-            </Card.Body>
-          </Card>
+        <Col
+          xs="1"
+          className="d-flex align-items-center justify-content-center p-0 m-0"
+        >
+          <div
+            className="border-start border-4 p-0 m-0"
+            style={{ height: "100%", borderColor: "red" }}
+          ></div>
+        </Col>
+        <Col xs="5 ps-0 ms-0">
+          <Row className="text-start">
+            <h2>About Us</h2>
+          </Row>
+          <p className="fs-5 pt-2 text-start">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minima,
+            ipsum obcaecati magni deleniti doloremque dolorem exercitationem
+            labore sequi? Amet ducimus at eos dicta id! Asperiores deserunt
+            repudiandae assumenda voluptate omnis. Lorem ipsum dolor sit amet
+            consectetur adipisicing elit. Id impedit enim officiis, similique
+            voluptas aspernatur alias earum soluta ratione accusantium eveniet
+            voluptatum fugiat commodi molestias nam facere sed pariatur sint?
+          </p>
+          <p className="fs-5 text-start">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minima,
+            ipsum obcaecati magni deleniti doloremque dolorem exercitationem
+            labore sequi? Amet ducimus at eos dicta id! Asperiores deserunt
+            repudiandae assumenda voluptate omnis. Lorem ipsum dolor sit amet
+            consectetur adipisicing elit.
+          </p>
+        </Col>
+      </Row>
+      <Row className="py-3">
+        <h2>Why our delivery?</h2>
+      </Row>
+      <Row>
+        <Col>
+          <img src="src\assets\img\order.png" alt="" />
+          <h3>Easy to order</h3>
+          <p className="text-muted fs-5">
+            You only need a few steps in ordering food
+          </p>
+        </Col>
+        <Col>
+          <img src="src\assets\img\delivery-bike.png" alt="" />
+          <h3>Fast delivery</h3>
+          <p className="text-muted fs-5">
+            Delivery that is always in time (30 min), even faster and also free.
+          </p>
+        </Col>
+        <Col>
+          <img src="src\assets\img\good-quality.png" alt="" />
+          <h3>Best quality</h3>
+          <p className="text-muted fs-5">
+            Not only fast, for us quality is also number one
+          </p>
+        </Col>
+      </Row>
+      <Row className="py-3">
+        <h2>Contact details</h2>
+      </Row>
+      <Row>
+        <Col>
+          <img src="src\assets\img\map.png" alt="" />
+          <h5>Our restaurant locations:</h5>
+          <p className="text-muted fs-6">st.Zelena 126, Lviv, Ukraine</p>
+          <p className="text-muted fs-6">st.Soborna 16, Lviv, Ukraine</p>
+        </Col>
+        <Col>
+          <img src="src\assets\img\phone.png" alt="" />
+          <h5>Phone numbers:</h5>
+          <p className="text-muted fs-6">+380974628345</p>
+          <p className="text-muted fs-6">+380634628345</p>
+        </Col>
+        <Col>
+          <img src="src\assets\img\gmail.png" alt="" />
+          <h5>Email:</h5>
+          <p className="text-muted fs-6 pb-0">example@gmail.com</p>
+          <p className="text-muted fs-6 mt-0">example@gmail.com</p>
+        </Col>
+        <Col>
+          <img src="src\assets\img\clock.png" alt="" />
+          <h5>Delivery time:</h5>
+          <p className="text-muted fs-6">
+            Monday-Saturday: 10:00 - 11:00 
+          </p>
+          <p className="text-muted fs-6">Sunday: Off day</p>
         </Col>
       </Row>
     </>
