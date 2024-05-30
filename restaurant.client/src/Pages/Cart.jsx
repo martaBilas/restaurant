@@ -1,36 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import Modal from "react-bootstrap/Modal";
-import { Row, Col, Button, ModalBody } from "react-bootstrap";
 
 import "./Cart.css";
 import OrderDetailsForm from "../Cart/OrderDetailsForm";
 import Order from "../Cart/Order";
 import ConfirmedOrder from "../Cart/ConfirmedOrder";
+import EmptyCart from "../Cart/EmptyCart";
+import { useOrder } from "../Cart/OrderContext";
+import { useOrderDispatch } from "../Cart/OrderContext";
 
 const Cart = (props) => {
-  const isMobile = window.innerWidth <= 768;
-  const [currentComponent, setCurrentComponent] = useState(1);
+  const dispatch = useOrderDispatch();
+  const order = useOrder();
+  const meals = order.meals;
+
+  const [currentComponent, setCurrentComponent] = useState(0);
+  const [isOrderPlaced, setIsOrderPlaced] = useState(false);
+
+  const setCurrentComponentHandler = () => {
+    if (meals.length === 0) {
+      setCurrentComponent(0);
+    } else {
+      setCurrentComponent(1);
+    }
+  };
+
+  useEffect(() => {
+    setCurrentComponentHandler();
+  }, [meals]);
+
+  const handleNextButtonClick = () => {
+    setCurrentComponent((prevComponent) => prevComponent + 1);
+  };
+
+  const handleBackButtonClick = () => {
+    setCurrentComponent(1);
+  };
 
   const renderComponent = () => {
     switch (currentComponent) {
+      case 0:
+        return <EmptyCart />;
       case 1:
-        return <Order handleNextButtonClick={handleNextButtonClick}/>;
+        return <Order handleNextButtonClick={handleNextButtonClick} />;
       case 2:
-        return <OrderDetailsForm handleNextButtonClick={handleNextButtonClick}/>;
+        return (
+          <OrderDetailsForm handleNextButtonClick={handleNextButtonClick} handleOrderPlacing={setIsOrderPlaced} />
+        );
       case 3:
         return <ConfirmedOrder />;
       default:
         return null;
     }
-  };
-
-  const handleNextButtonClick = () => {
-    setCurrentComponent(currentComponent + 1);
-  };
-
-  const handleBackButtonClick = () => {
-    setCurrentComponent(1);
   };
 
   const renderHeader = () => {
@@ -51,40 +72,27 @@ const Cart = (props) => {
     }
   };
 
-  return (
-    <React.Fragment>
-      <Offcanvas
-        placement="end"
-        show={props.showCart}
-        onHide={props.closeCartHandler}
-        className="custom-offcanvas d-flex flex-column justify-content-between"
-        backdropClassName="custom-offcanvas-backdrop"
-      >
-        <Offcanvas.Header className="pb-0" closeButton>
-          {renderHeader()}
-        </Offcanvas.Header>
-        <Offcanvas.Body>{renderComponent()}</Offcanvas.Body>
-        {/* <Row className="px-4 pb-3">
-          <Col className="d-flex justify-content-end">
-            {currentComponent !== 3 && (
-              <Button
-                onClick={handleNextButtonClick}
-                className="cartNext-but"
-                size="md"
-              >
-                Next
-              </Button>
-            )}
-          </Col>
-        </Row> */}
-      </Offcanvas>
+  const closeCartHandler = () => {
+    props.closeCartHandler();
+    if (isOrderPlaced) {
+      dispatch({ type: "clear"}); 
+      setIsOrderPlaced(false); 
+    }
+  };
 
-      {/* {isMobile && (
-        <Modal show={props.showCart} onHide={props.closeCartHandler}>
-          <ModalBody></ModalBody>
-        </Modal>
-      )} */}
-    </React.Fragment>
+  return (
+    <Offcanvas
+      placement="end"
+      show={props.showCart}
+      onHide={closeCartHandler}
+      className="custom-offcanvas d-flex flex-column justify-content-between"
+      backdropClassName="custom-offcanvas-backdrop"
+    >
+      <Offcanvas.Header className="pb-0" closeButton>
+        {renderHeader()}
+      </Offcanvas.Header>
+      <Offcanvas.Body>{renderComponent()}</Offcanvas.Body>
+    </Offcanvas>
   );
 };
 

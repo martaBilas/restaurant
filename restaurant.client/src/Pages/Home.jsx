@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
-import Catalogue from "../Meal/Components/Catalogue";
-import Menu from "../Meal/Components/Menu";
+import Catalogue from "../Catalog/Catalogue";
+import Menu from "../Menu/Menu";
 
 const Home = () => {
   const [selectedCatalogueItem, setSelectedCatalogueItem] = useState(1); // manage state here
@@ -11,7 +11,7 @@ const Home = () => {
   return (
     <Container>
       <Row className="py-4">
-        <Col>
+     {/*    <Col>
           <h1>Premium quality food</h1>
           <p className="fs-5">
             Indulge in an exquisite culinary journey at our restaurant, where
@@ -20,8 +20,8 @@ const Home = () => {
             crafted to delight your senses. Savor the finest ingredients sourced
             locally and globally.
           </p>
-        </Col>
-        <Col md="8">
+        </Col> */}
+        <Col md="12">
           <img src="src\assets\img\pic.jpeg" alt="img" className="img-fluid" />
         </Col>
       </Row>
@@ -32,10 +32,7 @@ const Home = () => {
           setMeals={setMeals}
         />
       </Row>
-
-      <Row>
         <Menu meals={meals} />
-      </Row>
     </Container>
   );
 };

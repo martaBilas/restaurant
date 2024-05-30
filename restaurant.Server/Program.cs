@@ -3,6 +3,7 @@ using Domain.Idenity;
 using Infrastructure.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +16,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("https://localhost:7135", "https://localhost:5173")
+                          policy.WithOrigins("https://localhost:7135"
+                              , "https://localhost:5174"
+                              , "https://localhost:5173"
+                              , "http://localhost:5173"
+                              , "http://localhost:5174")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
                                 .AllowCredentials();
@@ -36,6 +41,9 @@ builder.Services.AddDbContext<RestaurantDataContext>(options =>
 
 builder.Services.AddScoped<IMealImportService, MealImportService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<IOrderService,OrderService>();
+builder.Services.AddScoped<IAnonCustomerService,AnonCustomerService>();
+builder.Services.AddScoped<IUserService,UserService>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(opt =>
 {
@@ -74,7 +82,8 @@ if (app.Environment.IsDevelopment())
 app.UseForwardedHeaders();
 app.UseCookiePolicy(new CookiePolicyOptions
 {
-    Secure = CookieSecurePolicy.Always,
+    MinimumSameSitePolicy = SameSiteMode.None, // Set SameSite to None
+    Secure = CookieSecurePolicy.Always, // Set Secure to Always
 });
 
 

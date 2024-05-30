@@ -10,30 +10,30 @@ import SideDrawer from "./SideDrawer.jsx";
 import Backdrop from "../UIElements/Backdrop.jsx";
 
 const Header = () => {
-  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+  // const [drawerIsOpen, setDrawerIsOpen] = useState(false);
 
-  const openDrawerHandler = () => {
-    setDrawerIsOpen(true);
-  };
+  // const openDrawerHandler = () => {
+  //   setDrawerIsOpen(true);
+  // };
 
-  const closeDrawerHandler = () => {
-    setDrawerIsOpen(false);
-  };
+  // const closeDrawerHandler = () => {
+  //   setDrawerIsOpen(false);
+  // };
 
   return (
     <React.Fragment>
-      {drawerIsOpen && <Backdrop onClick={closeDrawerHandler} />}
+     {/*  {drawerIsOpen && <Backdrop onClick={closeDrawerHandler} />}
       <SideDrawer show={drawerIsOpen} onClick={closeDrawerHandler}>
         <nav className="main-navigation__drawer-nav">
           <HeaderNavLinks />
         </nav>
-      </SideDrawer>
+      </SideDrawer> */}
 
       <header id="header" class=" d-flex align-items-center">
         <div className="container d-flex align-items-center">
           <button
             className="main-navigation__menu-btn display-mobile"
-            onClick={openDrawerHandler}
+            /* onClick={openDrawerHandler} */
           >
             <RiMenuLine className="mobile-nav-toggle" />
           </button>
