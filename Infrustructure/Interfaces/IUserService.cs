@@ -1,4 +1,4 @@
-﻿using Infrastructure.Models;
+﻿using Infrastructure.Models.User;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Interfaces;

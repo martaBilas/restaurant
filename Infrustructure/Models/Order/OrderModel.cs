@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Models;
+﻿namespace Infrastructure.Models.Order;
 
 public class OrderModel
 {

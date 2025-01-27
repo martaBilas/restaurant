@@ -1,4 +1,6 @@
-﻿namespace Infrastructure.Models;
+﻿using Infrastructure.Models.Order;
+
+namespace Infrastructure.Models.User;
 
 public class UserOrdersModel
 {

@@ -1,6 +1,6 @@
 ﻿using Domain;
 using Infrastructure.Interfaces;
-using Infrastructure.Models;
+using Infrastructure.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

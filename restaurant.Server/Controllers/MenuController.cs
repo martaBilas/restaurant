@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Infrastructure.Interfaces;
-using Infrastructure.Models;
+using Infrastructure.Models.Menu;
 
 namespace restaurant.Server.Controllers;
 

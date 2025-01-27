@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Infrastructure.Models;
+namespace Infrastructure.Models.Order;
 
 public class PlaceOrderModel
 {

@@ -3,6 +3,8 @@ using Domain;
 using Domain.Idenity;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
+using Infrastructure.Models.Order;
+using Infrastructure.Models.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,16 +56,14 @@ public class UserService : IUserService
     public async Task<(UserInfoModel, string)> SignInAsync(string email, string password)
     {
         var user = await _userManager.FindByEmailAsync(email);
-        if (user == null)
+        
+        if (user == null || !await _userManager.IsEmailConfirmedAsync(user))
         {
             return (null, "There is no such user.");
         }
 
-        if (!await _userManager.IsEmailConfirmedAsync(user))
-        {
-            return (null, "There is no such user.");
-        }
         var rememberMe = true;
+        var role = await _userManager.GetRolesAsync(user);
 
         var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
@@ -73,7 +73,8 @@ public class UserService : IUserService
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Address = user.Address,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                Role = role
             }, "Success");
         else
             return (null, "Email or password is not correct.");
