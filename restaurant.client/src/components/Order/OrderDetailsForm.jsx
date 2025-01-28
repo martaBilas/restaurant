@@ -1,7 +1,7 @@
 import React from "react";
 
-import { placeOrder } from "../ApiCall";
-import CustomerInfoForm from "../UIElements/CustomerInfoForm";
+import { placeOrder } from "../../services/CartService";
+import CustomerInfoForm from "../../UIElements/CustomerInfoForm";
 
 const OrderDetailsForm = (props) => {
   const handleOrderSubmit = async (values) => {

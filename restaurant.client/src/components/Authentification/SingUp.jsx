@@ -2,8 +2,8 @@ import {React, useState} from "react";
 import { Row, Image } from "react-bootstrap";
 
 import "./SignUp.css";
-import { signUp } from "../ApiCall";
-import CustomerInfoForm from "../UIElements/CustomerInfoForm";
+import { signUp } from "../../services/UserService";
+import CustomerInfoForm from "../../UIElements/CustomerInfoForm";
 
 const SingUp = ({handleLogIn}) => {
   const [errorMessage, setErrorMessage]= useState(null)

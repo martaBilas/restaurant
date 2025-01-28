@@ -8,7 +8,7 @@ import {
   Image,
 } from "react-bootstrap";
 import { Formik } from "formik";
-import { SignInValidationSchema } from "../UIElements/validationSchema";
+import { SignInValidationSchema } from "../../utils/validationSchema";
 
 
 const LogIn = ({handleLogIn, errorMessage}) => {

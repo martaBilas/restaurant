@@ -3,13 +3,13 @@ import { Container, Row, Col } from "react-bootstrap";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 import { RiArrowRightSLine, RiArrowLeftSLine } from "@remixicon/react";
-import {fetchMeals, fetchCategories} from "../ApiCall.jsx"
+import { fetchMeals, fetchCategories } from "../../services/MenuService.jsx";
 
 import "swiper/css";
 import "./Catalogue.css";
-import "../styles.css";
+import "../../styles.css"
 
-import CatalogueItem from "./CatalogueItem";
+import CatalogueItem from "./CatalogueItem.jsx";
 
 const Catalogue = ({ setSelectedCatalogueItem, setMeals }) => {
 

@@ -2,9 +2,9 @@ import React from "react";
 import { Row, Col, Button, Form, FloatingLabel } from "react-bootstrap";
 import { Formik } from "formik";
 
-import { updateUserInfo } from "../ApiCall";
-import { useAuth } from "./AuthContext";
-import { UserInfoValidationSchema } from "../UIElements/validationSchema";
+import { updateUserInfo } from "../../services/UserInfo";
+import { useAuth } from "../../state/Auth/AuthContext";
+import { UserInfoValidationSchema } from "../../utils/validationSchema";
 
 const UserInfoForm = () => {
   const { user } = useAuth();

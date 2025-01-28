@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import MealCard from "../UIElements/MealCard";
+import MealCard from "./MealCard";
 import { Modal } from "react-bootstrap";
 
 import "./MenuItem.css";
-import "../styles.css";
+import "../../styles.css";
 
 const MenuItem = (props) => {
   const [quantity, setQuantity] = useState(1);

@@ -2,9 +2,9 @@ import { React, useState } from "react";
 import { Row, Col, Button, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import { logOut } from "../ApiCall";
-import { useAuth } from "./AuthContext";
-import UserOrdersList from "./UserOrders Page/UserOrdersList";
+import { logOut } from "../../services/UserService";
+import { useAuth } from "../../state/Auth/AuthContext";
+import UserOrdersList from "./UserOrders/UserOrdersList";
 import UserInfo from "./UserInfo";
 import "./UserAccount.css";
 

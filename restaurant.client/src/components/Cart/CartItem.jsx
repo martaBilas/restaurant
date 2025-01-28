@@ -1,12 +1,9 @@
 import { React } from "react";
 import { Row, Col } from "react-bootstrap";
 import "./CartItem.css";
-import { useOrderDispatch } from "./OrderContext";
-import {
-  incrementMealAmount,
-  decrementMealAmount,
-  deleteMealFromOrder,
-} from "../ApiCall";
+import { useOrderDispatch } from "../../state/Order/OrderContext";
+
+import { incrementMealAmount, decrementMealAmount, deleteMealFromOrder } from "../../services/CartService";
 
 const CartItem = (props) => {
   const dispatch = useOrderDispatch();

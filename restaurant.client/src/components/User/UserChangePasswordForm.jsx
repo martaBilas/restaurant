@@ -3,9 +3,9 @@ import { Row, Col, Button, Form, FloatingLabel } from "react-bootstrap";
 import { Formik } from "formik";
 
 import "./UserInfo.css"
-import { useAuth } from "./AuthContext";
-import { UserPasswordValidationSchema } from "../UIElements/validationSchema";
-import { updateUserPassword } from "../ApiCall";
+import { useAuth } from "../../state/Auth/AuthContext";
+import { UserPasswordValidationSchema } from "../../utils/validationSchema";
+import { updateUserPassword } from "../../services/UserInfo";
 
 const UserChangePasswordForm = () => {
   const { user } = useAuth();

@@ -1,7 +1,7 @@
 import { React } from "react";
-import CartItemsList from "./CartItemsList";
+import CartItemsList from "../Cart/CartItemsList";
 import { Row, Col, Button } from "react-bootstrap";
-import { useOrder } from "./OrderContext";
+import { useOrder } from "../../state/Order/OrderContext";
 
 const Order = (props) => {
   const order = useOrder();

@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Col, Row } from "react-bootstrap";
-import { addMealToCart } from "../ApiCall";
-import { useOrderDispatch } from "../Cart/OrderContext";
+import { addMealToCart } from "../../services/CartService";
+import { useOrderDispatch } from "../../state/Order/OrderContext";
 
 import "./MealCard.css";
 

@@ -4,8 +4,8 @@ import { Row, Col } from "react-bootstrap";
 import { useState, useEffect } from "react";
 
 import UserOrder from "./UserOrder";
-import { getUserOrdersByEmail } from "../../ApiCall";
-import { useAuth } from "../AuthContext";
+import { getUserOrdersByEmail } from "../../../services/UserInfo";
+import { useAuth } from "../../../state/Auth/AuthContext";
 
 const UserOrdersList = () => {
   const { user } = useAuth();
