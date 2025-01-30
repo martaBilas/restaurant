@@ -2,11 +2,11 @@ import React from "react";
 import { Outlet } from "react-router";
 
 import { OrderProvider } from "../../state/Order/OrderContext.jsx";
-import Header from "../Header.jsx";
+import Header from "./Header.jsx";
 import Footer from "../Footer.jsx";
-import "./Layout.css";
+import "../Layout.css";
 
-const Layout = () => {
+const UserLayout = () => {
   return (
     <div className="layout">
       <OrderProvider>
@@ -18,4 +18,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default UserLayout;

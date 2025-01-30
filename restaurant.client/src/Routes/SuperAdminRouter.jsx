@@ -1,21 +1,21 @@
 import { createBrowserRouter } from 'react-router-dom'
-import Layout from '../Layout/Layout.jsx'
 import Home from '../Pages/Home.jsx';
 import Info from '../Pages/Info.jsx';
+import { SuperAdminLayout } from '../Layout/SuperAdminLayout/SuperAdminLayout.jsx';
 
 export const SuperAdminRouter = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: <SuperAdminLayout />,
     children: [
       {
         path: '/',
         element: <Home />,
       },
-      {
-        path:'/contactInfo',
-        element: <Info/>
-      }
+    //   {
+    //     path:'/contactInfo',
+    //     element: <Info/>
+    //   }
     ],
   },
 ])

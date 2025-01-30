@@ -64,7 +64,7 @@ const Cart = (props) => {
             className="transparent_button fs-5"
             onClick={handleBackButtonClick}
           >
-            <i class="fa-solid fa-chevron-left"></i> back
+            <i className="fa-solid fa-chevron-left"></i> back
           </button>
         );
       default:

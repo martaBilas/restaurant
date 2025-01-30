@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
-import Layout from '../Layout/UserLayout/Layout.jsx';
+import UserLayout from '../Layout/UserLayout/UserLayout.jsx';
 
 import Home from '../Pages/Home.jsx';
 import Info from '../Pages/Info.jsx';
@@ -7,7 +7,7 @@ import Info from '../Pages/Info.jsx';
 const UserRouter = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: <UserLayout />,
     children: [
       {
         path: '/',

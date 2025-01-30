@@ -73,7 +73,7 @@ const LogIn = ({handleLogIn, errorMessage}) => {
               <Row className="pt-3">
                 <Col className="text-danger">
                   <i
-                    class="fa-solid fa-circle-exclamation fa-sm pe-2"
+                    className="fa-solid fa-circle-exclamation fa-sm pe-2"
                     style={{ color: '#dc3545' }}
                   ></i> 
                     {errorMessage}

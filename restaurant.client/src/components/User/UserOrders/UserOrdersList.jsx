@@ -40,7 +40,7 @@ const UserOrdersList = () => {
       ) : (
         <Row className=" d-block justify-content-center align-items-center">
           <Col className="text-center fs-3">
-            <div class="text-center fs-3 ratio ratio-16x9 ">
+            <div className="text-center fs-3 ratio ratio-16x9 ">
               <iframe src="https://lottie.host/embed/b9a47eca-0388-418f-8452-d0a25dd18f04/aKpfql0W1K.json"></iframe>
             </div>
           </Col>

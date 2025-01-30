@@ -3,9 +3,9 @@ import { NavLink, Link } from "react-router-dom";
 
 import UserLineIcon from "remixicon-react/UserLineIcon";
 import ShoppingCartLineIcon from "remixicon-react/ShoppingCartLineIcon";
-import "./HeaderNavLinks.css";
-import Cart from "../Pages/Cart";
-import AuthDraw from "../Pages/AuthDraw";
+import "../HeaderNavLinks.css";
+import Cart from "../../Pages/Cart";
+import AuthDraw from "../../Pages/AuthDraw";
 
 const HeaderNavLinks = () => {
   const [showCart, setShowCart] = useState(false);
