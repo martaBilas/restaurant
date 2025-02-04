@@ -1,12 +1,10 @@
 ﻿using Domain.Enums;
 using Domain.Idenity;
-using System.ComponentModel.DataAnnotations;
 
 namespace Domain;
 
 public class Order
 {
-    [Key]
     public long Id { get; set; }
 
     public Guid AnonId { get; set; }
@@ -19,7 +17,6 @@ public class Order
         get
         {
             return OrderRows?.Sum(x => x.Total) ?? 0;
-
         }
     }
 
