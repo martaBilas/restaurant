@@ -1,11 +1,7 @@
-﻿using Domain;
-using Infrastructure.Interfaces;
+﻿using Infrastructure.Interfaces;
 using Infrastructure.Models.User;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using System.Security.Cryptography.Xml;
 
 namespace restaurant.Server.Controllers;
 
@@ -101,4 +97,3 @@ public class UserController : ControllerBase
         return BadRequest(result.Errors);
     }
 }
-

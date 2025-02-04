@@ -1,8 +1,6 @@
 ﻿using DataContext;
-using Domain;
 using Domain.Idenity;
 using Infrastructure.Interfaces;
-using Infrastructure.Models;
 using Infrastructure.Models.Order;
 using Infrastructure.Models.User;
 using Microsoft.AspNetCore.Identity;

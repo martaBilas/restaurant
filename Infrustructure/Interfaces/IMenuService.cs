@@ -1,5 +1,4 @@
-﻿using Domain;
-using Infrastructure.Models.Menu;
+﻿using Infrastructure.Models.Menu;
 
 namespace Infrastructure.Interfaces;
 

@@ -3,8 +3,6 @@ using Domain;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Newtonsoft.Json;
-using System.Net.Http.Json;
-using System.Text.Json.Serialization;
 
 namespace Infrastructure.Services;
 

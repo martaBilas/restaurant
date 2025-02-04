@@ -1,75 +1,73 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models.Menu;
-using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace restaurant.Server.Controllers
+namespace restaurant.Server.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class AdminController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AdminController : ControllerBase
+    public readonly IOrderService _orderService;
+    public readonly IMenuService _menuService;
+
+    public AdminController(IMenuService menuService, IOrderService orderService)
     {
-        public readonly IOrderService _orderService;
-        public readonly IMenuService _menuService;
+        _menuService = menuService;
+        _orderService = orderService;
+    }
 
-        public AdminController(IMenuService menuService, IOrderService orderService)
-        {
-            _menuService = menuService;
-            _orderService = orderService;
+    [HttpGet("getOrders")]
+    public IActionResult GetOrders(int skip, int take, bool requireTotalCount)
+    {
+        try {
+            var orders = _orderService.GetOrders(skip, take, requireTotalCount);
+            return Ok(orders);
         }
-
-        [HttpGet("getOrders")]
-        public IActionResult GetOrders(int skip, int take, bool requireTotalCount)
+        catch (Exception ex)
         {
-            try {
-                var orders = _orderService.GetOrders(skip, take, requireTotalCount);
-                return Ok(orders);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest(ex.Message);
         }
+    }
 
-        [HttpPost("addMealToMenu")]
-        public IActionResult AddMeal([FromBody] MealModel newMeal)
+    [HttpPost("addMealToMenu")]
+    public IActionResult AddMeal([FromBody] MealModel newMeal)
+    {
+        try 
         {
-            try 
-            {
-                _menuService.AddMealToMenu(newMeal.Name, newMeal.CategoryId, newMeal.Price, newMeal.Weight, newMeal.ImageUrl, newMeal.Description);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            _menuService.AddMealToMenu(newMeal.Name, newMeal.CategoryId, newMeal.Price, newMeal.Weight, newMeal.ImageUrl, newMeal.Description);
+            return Ok();
         }
-
-        [HttpPut("updateMeal")]
-        public IActionResult UpdateMeal([FromBody] MealModel newMeal)
+        catch (Exception ex)
         {
-            try
-            {
-                _menuService.UpdateMeal(newMeal.Id, newMeal.Name, newMeal.CategoryId, newMeal.Price, newMeal.Weight, newMeal.ImageUrl, newMeal.Description);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest(ex.Message);
         }
+    }
 
-        [HttpDelete("deleteMealToMenu")]
-        public IActionResult DeleteMeal([FromBody] int mealId)
+    [HttpPut("updateMeal")]
+    public IActionResult UpdateMeal([FromBody] MealModel newMeal)
+    {
+        try
         {
-            try
-            {
-                _menuService.DeleteMealFromMenu(mealId);
-                return Ok();
-            }
-            catch (Exception ex) {
-                return BadRequest(ex.Message);
-            }
+            _menuService.UpdateMeal(newMeal.Id, newMeal.Name, newMeal.CategoryId, newMeal.Price, newMeal.Weight, newMeal.ImageUrl, newMeal.Description);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("deleteMealToMenu")]
+    public IActionResult DeleteMeal([FromBody] int mealId)
+    {
+        try
+        {
+            _menuService.DeleteMealFromMenu(mealId);
+            return Ok();
+        }
+        catch (Exception ex) {
+            return BadRequest(ex.Message);
         }
     }
 }
