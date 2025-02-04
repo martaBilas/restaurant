@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models;
+using Infrastructure.Models.Order;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

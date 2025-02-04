@@ -3,6 +3,7 @@ using Domain;
 using Domain.Idenity;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
+using Infrastructure.Models.Order;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
@@ -87,6 +88,36 @@ public class OrderService : IOrderService
             }).ToList()
         };
         return orderModel;
+    }
+
+    public IList<OrderModel> GetOrders(int skip, int take, bool requireTotalCount)
+    {
+        var orders = _db.Orders?
+           .Include(o => o.OrderRows)
+           .ThenInclude(or => or.Meal)
+           .OrderBy(e => e.Id)
+           .Where(e => e.IsPaid == true)
+           .Skip(skip)
+           .Take(take).ToList();
+
+        if (orders == null)
+            return new List<OrderModel>();
+
+        var orderModels = orders.Select(order => new OrderModel
+        {
+            Id = order.Id,
+            OrderRows = order.OrderRows?.Select(or => new OrderRowModel
+            {
+                Id = or.Id,
+                Price = or.Price,
+                Amount = or.Amount,
+                MealName = or.Meal.Name,
+                Weight = or.Meal.Weight,
+                ImageUrl = or.Meal.ImageUrl
+            }).ToList()
+        }).ToList();
+
+        return orderModels;
     }
     public int UptadeAmount(Guid anonId, int mealId, bool increment)
     {

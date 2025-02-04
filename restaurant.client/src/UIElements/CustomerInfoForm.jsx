@@ -2,12 +2,12 @@ import React from "react";
 import { Row, Col, Button, Form, FloatingLabel } from "react-bootstrap";
 import { Formik } from "formik";
 
-import { useAuth } from "../User/AuthContext";
+import { useAuth } from "../state/Auth/AuthContext";
 import {
   CartValidationSchema,
   SignUpValidationSchema,
-} from "../UIElements/validationSchema";
-import { OrderDetailsFormFields } from "../Cart/OrderDetailsFormFields";
+} from "../utils/validationSchema";
+import { OrderDetailsFormFields } from "../components/Order/OrderDetailsFormFields";
 
 const CustomerInfoForm = ({ handleFormSubmit, componentType, errorMessage }) => {
   const { user } = useAuth();

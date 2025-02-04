@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
 
 import "./Cart.css";
-import OrderDetailsForm from "../Cart/OrderDetailsForm";
-import Order from "../Cart/Order";
-import ConfirmedOrder from "../Cart/ConfirmedOrder";
-import EmptyCart from "../Cart/EmptyCart";
-import { useOrder } from "../Cart/OrderContext";
-import { useOrderDispatch } from "../Cart/OrderContext";
+import OrderDetailsForm from "../components/Order/OrderDetailsForm";
+import Order from "../components/Order/Order";
+import ConfirmedOrder from "../components/Order/ConfirmedOrder";
+import EmptyCart from "../components/Cart/EmptyCart";
+import { useOrder } from "../state/Order/OrderContext";
+import { useOrderDispatch } from "../state/Order/OrderContext";
 
 const Cart = (props) => {
   const dispatch = useOrderDispatch();
@@ -64,7 +64,7 @@ const Cart = (props) => {
             className="transparent_button fs-5"
             onClick={handleBackButtonClick}
           >
-            <i class="fa-solid fa-chevron-left"></i> back
+            <i className="fa-solid fa-chevron-left"></i> back
           </button>
         );
       default:

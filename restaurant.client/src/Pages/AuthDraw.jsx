@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Offcanvas } from "react-bootstrap";
 
 import "./AuthDraw.css";
-import SingUp from "../User/SingUp";
-import LogIn from "../User/LogIn";
-import UserAccount from "../User/UserAccount";
-import { useAuth } from "../User/AuthContext";
-import { signIn } from "../ApiCall";
+import SingUp from "../components/Authentification/SingUp";
+import LogIn from "../components/Authentification/LogIn";
+import UserAccount from "../components/User/UserAccount";
+import { useAuth } from "../state/Auth/AuthContext";
+import { signIn } from "../services/UserService";
 
 const AuthDraw = (props) => {
   const [currentComponent, setCurrentComponent] = useState(1);
