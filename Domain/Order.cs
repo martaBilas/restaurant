@@ -17,4 +17,9 @@ public class Order
     public double Total { get; set; } 
     public DateTime OrderDate { get; set; }
     public string? AdditionalInfo { get; set; }
+
+    public void RecalculateTotal()
+    {
+        Total = OrderRows?.Sum(x => x.Price * x.Amount) ?? 0;
+    }
 }

@@ -34,7 +34,7 @@ public class OrderService : IOrderService
             .OrderBy(e => e.Id)
             .LastOrDefault(o => o.AnonId == anonId && o.IsPaid == false);
 
-        if (existingOrder == null || existingOrder.IsPaid == true)
+        if (existingOrder == null)
         {
             var orderRows = new List<OrderRow> { newOrderRow };
 
@@ -46,6 +46,7 @@ public class OrderService : IOrderService
                 OrderRows = orderRows,
             };
 
+            newOrder.RecalculateTotal();
             _db.Orders.Add(newOrder);
         }
         else
@@ -58,6 +59,8 @@ public class OrderService : IOrderService
                 orderRow.Amount += amount;
             else
                 existingOrder.OrderRows.Add(newOrderRow);
+
+            existingOrder.RecalculateTotal();
         }
 
         _db.SaveChanges();
@@ -132,7 +135,18 @@ public class OrderService : IOrderService
             orderRow.Amount += 1;
         else if (orderRow.Amount > 1)
             orderRow.Amount -= 1;
+
         var amount = orderRow.Amount;
+
+        var order = _db.Orders
+                        .Include(o => o.OrderRows)
+                        .FirstOrDefault(o => o.AnonId == anonId && !o.IsPaid);
+
+        if (order != null)
+        {
+            order.RecalculateTotal(); 
+        }
+
         _db.SaveChanges();
 
         return amount;
@@ -152,11 +166,13 @@ public class OrderService : IOrderService
 
             if (orderRowToDelete != null)
             {
-                _db.OrderRows.Remove(orderRowToDelete);
+                order.OrderRows.Remove(orderRowToDelete);
             }
 
         }
-        if (order?.OrderRows?.Count == 0)
+        if (order?.OrderRows?.Count != 0)
+            order.RecalculateTotal();
+        else
             _db.Orders.Remove(order);
 
         _db.SaveChanges();
