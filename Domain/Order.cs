@@ -14,14 +14,7 @@ public class Order
     public virtual AppUser? Customer { get; set; }
     public bool IsPaid { get; set; }
     public PaymentType PaymentType { get; set; }
-    public double Total
-    {
-        get
-        {
-            return OrderRows?.Sum(x => x.Total) ?? 0;
-
-        }
-    }
-
+    public double Total { get; set; } 
+    public DateTime OrderDate { get; set; }
     public string? AdditionalInfo { get; set; }
 }
