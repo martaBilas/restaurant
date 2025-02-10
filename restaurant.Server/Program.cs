@@ -3,9 +3,11 @@ using DataContext.Seeds;
 using Domain.Idenity;
 using Infrastructure.Interfaces;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -31,8 +33,34 @@ builder.Services.AddCors(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Description = "Enter 'Bearer' [space] and then your token. Example: \"Bearer abcdef12345\"",
+        Name = "Authorization",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<RestaurantDataContext>(options =>
@@ -41,9 +69,9 @@ builder.Services.AddDbContext<RestaurantDataContext>(options =>
 
 builder.Services.AddScoped<IMealImportService, MealImportService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
-builder.Services.AddScoped<IOrderService,OrderService>();
-builder.Services.AddScoped<IAnonCustomerService,AnonCustomerService>();
-builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IAnonCustomerService, AnonCustomerService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddIdentity<AppUser, AppRole>(opt =>
 {
@@ -60,10 +88,23 @@ builder.Services.AddIdentity<AppUser, AppRole>(opt =>
     .AddEntityFrameworkStores<RestaurantDataContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication(o =>
+builder.Services.AddAuthentication(options =>
 {
-    o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    o.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "YourIssuer",
+        ValidAudience = "YourAudience",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisIsAReallyLongSecretKeyForJWTs12345!"))
+    };
 });
 
 var app = builder.Build();
@@ -106,6 +147,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors(MyAllowSpecificOrigins);
+
 app.UseAuthentication();
 app.UseAuthorization();
 

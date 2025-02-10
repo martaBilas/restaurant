@@ -1,7 +1,12 @@
-﻿using Infrastructure.Interfaces;
+﻿using Domain.Idenity;
+using Infrastructure.Interfaces;
 using Infrastructure.Models.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace restaurant.Server.Controllers;
 
@@ -11,10 +16,12 @@ public class UserController : ControllerBase
 {
 
     public readonly IUserService _userService;
+    public readonly UserManager<AppUser> _userManager;
 
-    public UserController(IUserService userService)
+    public UserController(IUserService userService, UserManager<AppUser> userManager)
     {
         _userService = userService;
+        _userManager = userManager;
     }
 
     [HttpPost("signUp")]
@@ -37,6 +44,47 @@ public class UserController : ControllerBase
             return Ok(new { message = message });
     }
 
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] SignInModel model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+        {
+            // Create user claims including roles.
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+            };
+
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisIsAReallyLongSecretKeyForJWTs12345!"));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: "YourIssuer",
+                audience: "YourAudience",
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: creds);
+
+            return Ok(new
+            {
+                token = new JwtSecurityTokenHandler().WriteToken(token)
+            });
+        }
+
+        return Unauthorized();
+    }
 
     [HttpGet("logOut")]
     public async Task<IActionResult> LogOut()
