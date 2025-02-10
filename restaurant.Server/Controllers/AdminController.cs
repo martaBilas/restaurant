@@ -19,10 +19,10 @@ namespace restaurant.Server.Controllers
         }
 
         [HttpGet("getOrders")]
-        public IActionResult GetOrders(int skip, int take, bool requireTotalCount)
+        public IActionResult GetOrdersList([FromQuery] int skip, int take, bool requireTotalCount)
         {
             try {
-                var orders = _orderService.GetOrders(skip, take, requireTotalCount);
+                var orders = _orderService.GetOrdersList(skip, take, requireTotalCount);
                 return Ok(orders);
             }
             catch (Exception ex)
