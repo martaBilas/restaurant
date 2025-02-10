@@ -4,6 +4,7 @@ using Domain.Idenity;
 using Infrastructure.Interfaces;
 using Infrastructure.Models;
 using Infrastructure.Models.Order;
+using Infrastructure.Models.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
@@ -34,7 +35,7 @@ public class OrderService : IOrderService
             .OrderBy(e => e.Id)
             .LastOrDefault(o => o.AnonId == anonId && o.IsPaid == false);
 
-        if (existingOrder == null || existingOrder.IsPaid == true)
+        if (existingOrder == null)
         {
             var orderRows = new List<OrderRow> { newOrderRow };
 
@@ -46,6 +47,7 @@ public class OrderService : IOrderService
                 OrderRows = orderRows,
             };
 
+            newOrder.RecalculateTotal();
             _db.Orders.Add(newOrder);
         }
         else
@@ -58,6 +60,8 @@ public class OrderService : IOrderService
                 orderRow.Amount += amount;
             else
                 existingOrder.OrderRows.Add(newOrderRow);
+
+            existingOrder.RecalculateTotal();
         }
 
         _db.SaveChanges();
@@ -90,34 +94,40 @@ public class OrderService : IOrderService
         return orderModel;
     }
 
-    public IList<OrderModel> GetOrders(int skip, int take, bool requireTotalCount)
+    public OrderListResponse GetOrdersList(int skip, int take, bool requireTotalCount)
     {
-        var orders = _db.Orders?
-           .Include(o => o.OrderRows)
-           .ThenInclude(or => or.Meal)
-           .OrderBy(e => e.Id)
-           .Where(e => e.IsPaid == true)
-           .Skip(skip)
-           .Take(take).ToList();
+        var query = _db.Orders?
+            .Include(o => o.Customer)
+            .Where(e => e.IsPaid == true);
 
-        if (orders == null)
-            return new List<OrderModel>();
+        int totalCount = requireTotalCount ? query.Count() : -1; 
+
+        var orders = query
+            .OrderByDescending(e => e.OrderDate)
+            .Skip(skip)
+            .Take(take)
+            .ToList();
 
         var orderModels = orders.Select(order => new OrderModel
         {
             Id = order.Id,
-            OrderRows = order.OrderRows?.Select(or => new OrderRowModel
+            Customer = new UserModel
             {
-                Id = or.Id,
-                Price = or.Price,
-                Amount = or.Amount,
-                MealName = or.Meal.Name,
-                Weight = or.Meal.Weight,
-                ImageUrl = or.Meal.ImageUrl
-            }).ToList()
+                Id = order.Customer.Id,
+                LastName = order.Customer.LastName,
+                FirstName = order.Customer.FirstName,
+                PhoneNumber = order.Customer.PhoneNumber,
+                Address = order.Customer.Address
+            },
+            Total = order.Total,
+            OrderDate=order.OrderDate
         }).ToList();
 
-        return orderModels;
+        return new OrderListResponse
+        {
+            Orders = orderModels,
+            TotalCount = totalCount
+        };
     }
     public int UptadeAmount(Guid anonId, int mealId, bool increment)
     {
@@ -132,7 +142,18 @@ public class OrderService : IOrderService
             orderRow.Amount += 1;
         else if (orderRow.Amount > 1)
             orderRow.Amount -= 1;
+
         var amount = orderRow.Amount;
+
+        var order = _db.Orders
+                        .Include(o => o.OrderRows)
+                        .FirstOrDefault(o => o.AnonId == anonId && !o.IsPaid);
+
+        if (order != null)
+        {
+            order.RecalculateTotal();
+        }
+
         _db.SaveChanges();
 
         return amount;
@@ -152,11 +173,13 @@ public class OrderService : IOrderService
 
             if (orderRowToDelete != null)
             {
-                _db.OrderRows.Remove(orderRowToDelete);
+                order.OrderRows.Remove(orderRowToDelete);
             }
 
         }
-        if (order?.OrderRows?.Count == 0)
+        if (order?.OrderRows?.Count != 0)
+            order.RecalculateTotal();
+        else
             _db.Orders.Remove(order);
 
         _db.SaveChanges();
@@ -171,8 +194,8 @@ public class OrderService : IOrderService
             Address = adress,
             Email = email,
             PhoneNumber = phone,
-            EmailConfirmed=false,
-            PhoneNumberConfirmed=false,
+            EmailConfirmed = false,
+            PhoneNumberConfirmed = false,
         };
 
         var order = _db.Orders
@@ -180,7 +203,7 @@ public class OrderService : IOrderService
                          .LastOrDefault(o => o.AnonId == anonId && o.IsPaid == false);
         order.Customer = customer;
         order.IsPaid = true;
-        if(additionalInfo != null) 
+        if (additionalInfo != null)
             order.AdditionalInfo = additionalInfo;
         order.PaymentType = (Domain.Enums.PaymentType)paymentType;
 

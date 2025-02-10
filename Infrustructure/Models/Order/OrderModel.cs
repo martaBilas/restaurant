@@ -1,15 +1,12 @@
-﻿namespace Infrastructure.Models.Order;
+﻿using Infrastructure.Models.User;
+
+namespace Infrastructure.Models.Order;
 
 public class OrderModel
 {
     public long Id { get; set; }
     public IEnumerable<OrderRowModel>? OrderRows { get; set; }
-    public double Total
-    {
-        get
-        {
-            return OrderRows?.Sum(x => x.Sum) ?? 0;
-
-        }
-    }
+    public UserModel? Customer { get; set; } 
+    public double Total { get; set; }
+    public DateTime OrderDate { get; set; }
 }

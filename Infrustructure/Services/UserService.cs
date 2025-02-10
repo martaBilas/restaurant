@@ -53,7 +53,7 @@ public class UserService : IUserService
         return result;
     }
 
-    public async Task<(UserInfoModel, string)> SignInAsync(string email, string password)
+    public async Task<(UserModel, string)> SignInAsync(string email, string password)
     {
         var user = await _userManager.FindByEmailAsync(email);
         
@@ -67,7 +67,7 @@ public class UserService : IUserService
 
         var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
-            return (new UserInfoModel
+            return (new UserModel
             {
                 Email = user.Email,
                 FirstName = user.FirstName,
