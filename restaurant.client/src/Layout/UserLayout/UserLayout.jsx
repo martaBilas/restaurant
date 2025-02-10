@@ -11,8 +11,10 @@ const UserLayout = () => {
     <div className="layout">
       <OrderProvider>
         <Header />
-        <Outlet />
-        <Footer />
+        <div className="body-container">
+          <Outlet />
+        </div >
+       
       </OrderProvider>
     </div>
   );
