@@ -1,6 +1,5 @@
 ﻿using Infrastructure.Interfaces;
 using Infrastructure.Models.Menu;
-using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace restaurant.Server.Controllers

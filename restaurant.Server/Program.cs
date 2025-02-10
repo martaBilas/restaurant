@@ -1,9 +1,9 @@
 using DataContext;
+using DataContext.Seeds;
 using Domain.Idenity;
 using Infrastructure.Interfaces;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,6 +67,22 @@ builder.Services.AddAuthentication(o =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<RestaurantDataContext>();
+        await context.Database.MigrateAsync();
+        await IdentitySeeder.EnsureDataSeeded(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred seeding the DB.");
+    }
+}
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
