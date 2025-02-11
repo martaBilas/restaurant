@@ -1,8 +1,10 @@
-﻿using Domain.Idenity;
+﻿using Application.Settings;
+using Domain.Idenity;
 using Infrastructure.Interfaces;
 using Infrastructure.Models.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,11 +19,13 @@ public class UserController : ControllerBase
 
     public readonly IUserService _userService;
     public readonly UserManager<AppUser> _userManager;
+    public readonly JwtSettings _jwtSettings;
 
-    public UserController(IUserService userService, UserManager<AppUser> userManager)
+    public UserController(IUserService userService, UserManager<AppUser> userManager, IOptions<JwtSettings> jwtSettings)
     {
         _userService = userService;
         _userManager = userManager;
+        _jwtSettings = jwtSettings.Value;
     }
 
     [HttpPost("signUp")]
@@ -67,12 +71,12 @@ public class UserController : ControllerBase
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisIsAReallyLongSecretKeyForJWTs12345!"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: "YourIssuer",
-                audience: "YourAudience",
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
                 claims: claims,
                 expires: DateTime.Now.AddHours(1),
                 signingCredentials: creds);
@@ -145,4 +149,3 @@ public class UserController : ControllerBase
         return BadRequest(result.Errors);
     }
 }
-

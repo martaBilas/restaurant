@@ -1,111 +1,37 @@
 using DataContext;
 using DataContext.Seeds;
-using Domain.Idenity;
-using Infrastructure.Interfaces;
-using Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+using restaurant.Server.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("https://localhost:7135"
-                              , "https://localhost:5174"
-                              , "https://localhost:5173"
-                              , "http://localhost:5173"
-                              , "http://localhost:5174")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .AllowCredentials();
-                      });
-});
-// Add services to the container.
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+// Add cors policy
+builder.Services.AddCustomCors(builder.Configuration, MyAllowSpecificOrigins);
+
+// Add configurations 
+builder.Services.AddCustomConfigurations(builder.Configuration);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddSwaggerGen(c =>
-{
-    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-    {
-        Description = "Enter 'Bearer' [space] and then your token. Example: \"Bearer abcdef12345\"",
-        Name = "Authorization",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
+// Add swagger
+builder.Services.AddCustomSwagger();
 
-    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
-});
+// Add db connection
+builder.Services.AddCustomDbContext(builder.Configuration);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<RestaurantDataContext>(options =>
-            options.UseSqlServer(connectionString)
-            , ServiceLifetime.Scoped);
+// Add identity
+builder.Services.AddCustomIdentity();
 
-builder.Services.AddScoped<IMealImportService, MealImportService>();
-builder.Services.AddScoped<IMenuService, MenuService>();
-builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IAnonCustomerService, AnonCustomerService>();
-builder.Services.AddScoped<IUserService, UserService>();
+// Add authentication bearer token
+builder.Services.AddCustomAuthentication(builder.Configuration);
 
-builder.Services.AddIdentity<AppUser, AppRole>(opt =>
-{
-    opt.Password.RequiredLength = 4;
-    opt.Password.RequiredUniqueChars = 0;
-    opt.Password.RequireNonAlphanumeric = false;
-    opt.Password.RequiredUniqueChars = 0;
-    opt.Password.RequireDigit = false;
-    opt.Password.RequireUppercase = false;
-    opt.Password.RequireLowercase = false;
-    opt.SignIn.RequireConfirmedEmail = false;
-    opt.SignIn.RequireConfirmedAccount = false;
-})
-    .AddEntityFrameworkStores<RestaurantDataContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = "YourIssuer",
-        ValidAudience = "YourAudience",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisIsAReallyLongSecretKeyForJWTs12345!"))
-    };
-});
+// Add services 
+builder.Services.AddCustomServices();
 
 var app = builder.Build();
 
@@ -128,7 +54,6 @@ using (var scope = app.Services.CreateScope())
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -142,7 +67,6 @@ app.UseCookiePolicy(new CookiePolicyOptions
     MinimumSameSitePolicy = SameSiteMode.None, // Set SameSite to None
     Secure = CookieSecurePolicy.Always, // Set Secure to Always
 });
-
 
 app.UseHttpsRedirection();
 app.UseRouting();
