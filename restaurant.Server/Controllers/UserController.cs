@@ -1,11 +1,14 @@
-﻿using Domain;
+﻿using Application.Settings;
+using Domain.Idenity;
 using Infrastructure.Interfaces;
 using Infrastructure.Models.User;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using System.Security.Cryptography.Xml;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace restaurant.Server.Controllers;
 
@@ -15,10 +18,14 @@ public class UserController : ControllerBase
 {
 
     public readonly IUserService _userService;
+    public readonly UserManager<AppUser> _userManager;
+    public readonly JwtSettings _jwtSettings;
 
-    public UserController(IUserService userService)
+    public UserController(IUserService userService, UserManager<AppUser> userManager, IOptions<JwtSettings> jwtSettings)
     {
         _userService = userService;
+        _userManager = userManager;
+        _jwtSettings = jwtSettings.Value;
     }
 
     [HttpPost("signUp")]
@@ -41,6 +48,47 @@ public class UserController : ControllerBase
             return Ok(new { message = message });
     }
 
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] SignInModel model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+        {
+            // Create user claims including roles.
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+            };
+
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: creds);
+
+            return Ok(new
+            {
+                token = new JwtSecurityTokenHandler().WriteToken(token)
+            });
+        }
+
+        return Unauthorized();
+    }
 
     [HttpGet("logOut")]
     public async Task<IActionResult> LogOut()
@@ -101,4 +149,3 @@ public class UserController : ControllerBase
         return BadRequest(result.Errors);
     }
 }
-

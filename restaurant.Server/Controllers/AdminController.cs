@@ -1,6 +1,7 @@
-﻿using Infrastructure.Interfaces;
+﻿using Application.Configurations;
+using Infrastructure.Interfaces;
 using Infrastructure.Models.Menu;
-using Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace restaurant.Server.Controllers
@@ -18,10 +19,12 @@ namespace restaurant.Server.Controllers
             _orderService = orderService;
         }
 
+        [Authorize]
         [HttpGet("getOrders")]
         public IActionResult GetOrdersList([FromQuery] int skip, int take, bool requireTotalCount)
         {
-            try {
+            try
+            {
                 var orders = _orderService.GetOrdersList(skip, take, requireTotalCount);
                 return Ok(orders);
             }
@@ -31,10 +34,11 @@ namespace restaurant.Server.Controllers
             }
         }
 
+        [Authorize(Roles = IdentityRoles.Admin)]
         [HttpPost("addMealToMenu")]
         public IActionResult AddMeal([FromBody] MealModel newMeal)
         {
-            try 
+            try
             {
                 _menuService.AddMealToMenu(newMeal.Name, newMeal.CategoryId, newMeal.Price, newMeal.Weight, newMeal.ImageUrl, newMeal.Description);
                 return Ok();
@@ -67,7 +71,8 @@ namespace restaurant.Server.Controllers
                 _menuService.DeleteMealFromMenu(mealId);
                 return Ok();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
         }

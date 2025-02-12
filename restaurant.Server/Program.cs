@@ -1,76 +1,58 @@
 using DataContext;
-using Domain.Idenity;
-using Infrastructure.Interfaces;
-using Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.AspNetCore.Identity;
+using DataContext.Seeds;
 using Microsoft.EntityFrameworkCore;
-
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+using restaurant.Server.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("https://localhost:7135"
-                              , "https://localhost:5174"
-                              , "https://localhost:5173"
-                              , "http://localhost:5173"
-                              , "http://localhost:5174")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .AllowCredentials();
-                      });
-});
-// Add services to the container.
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+// Add cors policy
+builder.Services.AddCustomCors(builder.Configuration, MyAllowSpecificOrigins);
+
+// Add configurations 
+builder.Services.AddCustomConfigurations(builder.Configuration);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<RestaurantDataContext>(options =>
-            options.UseSqlServer(connectionString)
-            , ServiceLifetime.Scoped);
+// Add swagger
+builder.Services.AddCustomSwagger();
 
-builder.Services.AddScoped<IMealImportService, MealImportService>();
-builder.Services.AddScoped<IMenuService, MenuService>();
-builder.Services.AddScoped<IOrderService,OrderService>();
-builder.Services.AddScoped<IAnonCustomerService,AnonCustomerService>();
-builder.Services.AddScoped<IUserService,UserService>();
+// Add db connection
+builder.Services.AddCustomDbContext(builder.Configuration);
 
-builder.Services.AddIdentity<AppUser, AppRole>(opt =>
-{
-    opt.Password.RequiredLength = 4;
-    opt.Password.RequiredUniqueChars = 0;
-    opt.Password.RequireNonAlphanumeric = false;
-    opt.Password.RequiredUniqueChars = 0;
-    opt.Password.RequireDigit = false;
-    opt.Password.RequireUppercase = false;
-    opt.Password.RequireLowercase = false;
-    opt.SignIn.RequireConfirmedEmail = false;
-    opt.SignIn.RequireConfirmedAccount = false;
-})
-    .AddEntityFrameworkStores<RestaurantDataContext>()
-    .AddDefaultTokenProviders();
+// Add identity
+builder.Services.AddCustomIdentity();
 
-builder.Services.AddAuthentication(o =>
-{
-    o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    o.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-});
+// Add authentication bearer token
+builder.Services.AddCustomAuthentication(builder.Configuration);
+
+// Add services 
+builder.Services.AddCustomServices();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<RestaurantDataContext>();
+        await context.Database.MigrateAsync();
+        await IdentitySeeder.EnsureDataSeeded(services);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred seeding the DB.");
+    }
+}
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -86,10 +68,10 @@ app.UseCookiePolicy(new CookiePolicyOptions
     Secure = CookieSecurePolicy.Always, // Set Secure to Always
 });
 
-
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors(MyAllowSpecificOrigins);
+
 app.UseAuthentication();
 app.UseAuthorization();
 
