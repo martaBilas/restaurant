@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Infrastructure.Interfaces;
 using Infrastructure.Models.Menu;
 
@@ -7,8 +6,6 @@ namespace restaurant.Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-
-
 public class MenuController : ControllerBase
 {
     private readonly IMenuService _menuService;
