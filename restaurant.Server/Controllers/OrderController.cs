@@ -20,17 +20,6 @@ namespace restaurant.Server.Controllers
 			_userService = userService;
 		}
 
-		[HttpPost("addMealToOrder")]
-		public ActionResult AddMealToOrder([FromBody] AddMealModel addModel)
-		{
-			var anonimusId = _anonCustomerService.CreateAnonCustomer();
-
-			var wasOrderAdded = _orderService.AddOrUpdateOrder(anonimusId, addModel.MealId, addModel.Amount);
-			if (wasOrderAdded)
-				return Ok("added to cart");
-			return BadRequest("Failed to add meal to order. Please try again.");
-		}
-
 		[HttpGet("GetOrder")]
 		public IActionResult GetOrder()
 		{
@@ -39,6 +28,21 @@ namespace restaurant.Server.Controllers
 				return Ok(new OrderModel());
 			var model = _orderService.GetOrder(anonId);
 			return Ok(model);
+		}
+
+		[Authorize(Roles = IdentityRoles.Admin + "," + IdentityRoles.SuperAdmin)]
+		[HttpGet("GetOrderById/{OrderId}")]
+		public async Task<IActionResult> GetOrderByIdAsync([FromRoute] long OrderId)
+		{
+			try
+			{
+				var order = await _orderService.GetOrderByIdWithStatusHistory(OrderId);
+				return Ok(order);
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[Authorize(Roles = IdentityRoles.User)]
@@ -56,6 +60,39 @@ namespace restaurant.Server.Controllers
 			}
 		}
 
+		[HttpPost("addMealToOrder")]
+		public ActionResult AddMealToOrder([FromBody] AddMealModel addModel)
+		{
+			var anonimusId = _anonCustomerService.CreateAnonCustomer();
+
+			var wasOrderAdded = _orderService.AddOrUpdateOrder(anonimusId, addModel.MealId, addModel.Amount);
+			if (wasOrderAdded)
+				return Ok("added to cart");
+			return BadRequest("Failed to add meal to order. Please try again.");
+		}
+
+		[HttpPost("placeOrder")]
+		public IActionResult PlaceOrder([FromBody] PlaceOrderModel model)
+		{
+			try
+			{
+				var anonId = _anonCustomerService.GetAnonCustomer();
+				bool isOrderPlaces = false;
+				if (ModelState.IsValid)
+				{
+					isOrderPlaces = _orderService.PlaceOrder(anonId.Value, model.Name, model.Surname, model.Address, model.Email, model.Phone, model.PaymentType, model.AdditionalInfo);
+				}
+				if (isOrderPlaces)
+					return Ok();
+				else
+					return BadRequest($"An error occurred while plaicng order, please try again.");
+			}
+			catch (Exception ex)
+			{
+				return BadRequest($"An error occurred while plaicng order: {ex.Message}");
+			}
+		}
+
 		[HttpPut("DecrementAmount")]
 		public IActionResult DecrementAmount([FromBody] int mealId)
 		{
@@ -69,7 +106,6 @@ namespace restaurant.Server.Controllers
 			{
 				return BadRequest($"An error occurred while decrement the amount: {ex.Message}");
 			}
-
 		}
 
 		[HttpPut("IncrementAmount")]
@@ -93,28 +129,6 @@ namespace restaurant.Server.Controllers
 			var anonId = _anonCustomerService.GetAnonCustomer();
 			_orderService.DeleteOrderRow(anonId.Value, mealId);
 			return Ok();
-		}
-
-		[HttpPost("placeOrder")]
-		public IActionResult PlaceOrder([FromBody] PlaceOrderModel model)
-		{
-			try
-			{
-				var anonId = _anonCustomerService.GetAnonCustomer();
-				bool isOrderPlaces = false;
-				if (ModelState.IsValid)
-				{
-					isOrderPlaces = _orderService.PlaceOrder(anonId.Value, model.Name, model.Surname, model.Address, model.Email, model.Phone, model.PaymentType, model.AdditionalInfo);
-				}
-				if (isOrderPlaces)
-					return Ok();
-				else
-					return BadRequest($"An error occurred while plaicng order, please try again.");
-			}
-			catch (Exception ex)
-			{
-				return BadRequest($"An error occurred while plaicng order: {ex.Message}");
-			}
 		}
 	}
 }

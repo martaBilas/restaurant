@@ -89,11 +89,62 @@ public class OrderService : IOrderService
 		return true;
 	}
 
+	public async Task<OrderWithStatusHistoryModel> GetOrderByIdWithStatusHistory(long orderId)
+	{
+		var order = await _db.Orders
+			.Include(o => o.OrderRows)
+				.ThenInclude(o => o.Meal)
+			.Include(o => o.Customer)
+			.Include(o => o.OrderStatusHistories.OrderByDescending(osh => osh.TimeOfChange)) 
+				.ThenInclude(osh => osh.OrderStatus)
+			.Include(o => o.OrderStatusHistories)
+				.ThenInclude(osh => osh.User)
+			.FirstOrDefaultAsync(o => o.Id == orderId);
+
+		return new OrderWithStatusHistoryModel
+		{
+			Id = order.Id,
+			OrderRows = order.OrderRows?.Select(or => new OrderRowModel
+			{
+				Id = or.Id,
+				Price = or.Price,
+				Amount = or.Amount,
+				MealName = or.Meal.Name,
+				Weight = or.Meal.Weight,
+				ImageUrl = or.Meal.ImageUrl
+			}).ToList(),
+			Customer = new UserModel
+			{
+				Id = order.Customer.Id,
+				LastName = order.Customer.LastName,
+				FirstName = order.Customer.FirstName,
+				PhoneNumber = order.Customer.PhoneNumber,
+				Address = order.Customer.Address
+			},
+			Total = order.Total,
+			OrderDate = order.OrderDate,
+			StatusHistory = order.OrderStatusHistories.Select(orsh => new OrderStatusHistoryModel
+			{
+				Id = orsh.Id,
+				StatusName = orsh.OrderStatus?.Name,
+				ChangedBy = new UserModel
+				{
+					Id = orsh.User.Id,
+					LastName = orsh.User.LastName,
+					FirstName = orsh.User.FirstName,
+					PhoneNumber = orsh.User.PhoneNumber,
+					Address = orsh.User.Address
+				},
+				TimeOfChange = orsh.TimeOfChange,
+			}).ToList()
+		};
+	}
+
 	public OrderModel GetOrder(Guid? anonId)
 	{
 		var order = _db.Orders?
 			.Include(o => o.OrderRows)
-			.ThenInclude(o => o.Meal)
+				.ThenInclude(o => o.Meal)
 			.OrderBy(e => e.Id)
 			.LastOrDefault(e => e.AnonId == anonId && e.IsPaid == false);
 

@@ -159,7 +159,6 @@ public class UserService : IUserService
 		return result;
 	}
 
-
 	public async Task<UserOrdersModel> GetUserOrdersByEmail(string email)
 	{
 		var user = await _userManager.FindByEmailAsync(email);
@@ -202,7 +201,7 @@ public class UserService : IUserService
 						Name = lastStatusHistory.OrderStatus.Name
 					} : new OrderStatusModel
 					{
-						Id = 0, 
+						Id = 0,
 						Name = "Unknown"
 					}
 				};
