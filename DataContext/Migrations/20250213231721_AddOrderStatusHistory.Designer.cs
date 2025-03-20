@@ -4,6 +4,7 @@ using DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataContext.Migrations
 {
     [DbContext(typeof(RestaurantDataContext))]
-    partial class RestaurantDataContextModelSnapshot : ModelSnapshot
+    [Migration("20250213231721_AddOrderStatusHistory")]
+    partial class AddOrderStatusHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -317,48 +320,6 @@ namespace DataContext.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OrderStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Name = "New"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Name = "Confirmed"
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            Name = "Preparing"
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            Name = "Out for delivery"
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            Name = "Delivered"
-                        },
-                        new
-                        {
-                            Id = 6L,
-                            Name = "Canceled by customer"
-                        },
-                        new
-                        {
-                            Id = 7L,
-                            Name = "Canceled by restaurant"
-                        },
-                        new
-                        {
-                            Id = 8L,
-                            Name = "Returned"
-                        });
                 });
 
             modelBuilder.Entity("Domain.OrderStatusHistory", b =>

@@ -34,7 +34,7 @@ export const SuperAdminHeaderNavLinks = () => {
           <NavLink to="/administrators">Admins</NavLink>
         </li>
         <li>
-          <NavLink to="/order">Orders</NavLink>
+          <NavLink to="/orders">Orders</NavLink>
         </li>
         <li>
           <Link onClick={openAuthHandler}>

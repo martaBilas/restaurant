@@ -3,7 +3,6 @@ import { Outlet } from "react-router";
 
 import { OrderProvider } from "../../state/Order/OrderContext.jsx";
 import Header from "./Header.jsx";
-import Footer from "../Footer.jsx";
 import "../Layout.css";
 
 const UserLayout = () => {
@@ -11,8 +10,9 @@ const UserLayout = () => {
     <div className="layout">
       <OrderProvider>
         <Header />
-        <Outlet />
-        <Footer />
+        <div className="body-container">
+          <Outlet />
+        </div >
       </OrderProvider>
     </div>
   );
