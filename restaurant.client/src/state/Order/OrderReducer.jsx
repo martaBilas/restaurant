@@ -8,9 +8,7 @@ export const orderReducer = (state, action) => {
         const newMeals = [...state.meals];
         newMeals[existingMealIndex].amount += action.meal.amount;
         const newTotal = newMeals.reduce(
-          (total, meal) => total + meal.price * meal.amount,
-          0
-        );
+          (total, meal) => total + meal.price * meal.amount, 0 );
         return { meals: newMeals, total: newTotal };
       } else {
         const newMeals = [...state.meals, action.meal];

@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Models.Order;
+using System.Collections.Generic;
 
 namespace Infrastructure.Interfaces;
 
@@ -11,4 +12,5 @@ public interface IOrderService
 	bool PlaceOrder(Guid anonId, string name, string surname, string adress, string email, string phone, int paymentType, string additionalInfo);
 	public int UptadeAmount(Guid anonId, int mealId, bool increment);
 	Task<OrderWithStatusHistoryModel> GetOrderByIdWithStatusHistory(long orderId);
+	public List<OrderModel> GetOrdersList();
 }

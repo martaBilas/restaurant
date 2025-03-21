@@ -10,4 +10,5 @@ public class OrderWithStatusHistoryModel
 	public double Total { get; set; }
 	public List<OrderStatusHistoryModel> StatusHistory { get; set; }
 	public DateTime OrderDate { get; set; }
+    public string? AdditionalInfo { get; set; }
 }

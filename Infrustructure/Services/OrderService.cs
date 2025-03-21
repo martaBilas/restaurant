@@ -123,6 +123,7 @@ public class OrderService : IOrderService
 			},
 			Total = order.Total,
 			OrderDate = order.OrderDate,
+			AdditionalInfo=order.AdditionalInfo,
 			StatusHistory = order.OrderStatusHistories.Select(orsh => new OrderStatusHistoryModel
 			{
 				Id = orsh.Id,
@@ -196,20 +197,48 @@ public class OrderService : IOrderService
 			OrderDate = order.OrderDate
 		}).ToList();
 
-		return new OrderListResponse
-		{
-			Orders = orderModels,
-			TotalCount = totalCount
-		};
-	}
-	public int UptadeAmount(Guid anonId, int mealId, bool increment)
-	{
-		var orderRow = _db.Orders
-			 .Where(o => o.AnonId == anonId && !o.IsPaid)
-			 .OrderByDescending(o => o.Id)
-			 .SelectMany(o => o.OrderRows)
-			 .Include(or => or.Meal)
-			 .FirstOrDefault(or => or.Meal.Id == mealId);
+        return new OrderListResponse
+        {
+            Orders = orderModels,
+            TotalCount = totalCount
+        };
+    }
+
+    public List<OrderModel> GetOrdersList()
+    {
+        var query = _db.Orders?
+            .Include(o => o.Customer)
+            .Where(e => e.IsPaid == true);
+
+        var orders = query
+            .OrderByDescending(e => e.OrderDate)
+            .ToList();
+
+        var orderModels = orders.Select(order => new OrderModel
+        {
+            Id = order.Id,
+            Customer = new UserModel
+            {
+                Id = order.Customer.Id,
+                LastName = order.Customer.LastName,
+                FirstName = order.Customer.FirstName,
+                PhoneNumber = order.Customer.PhoneNumber,
+                Address = order.Customer.Address
+            },
+            Total = order.Total,
+            OrderDate = order.OrderDate
+        }).ToList();
+
+        return orderModels;
+    }
+    public int UptadeAmount(Guid anonId, int mealId, bool increment)
+    {
+        var orderRow = _db.Orders
+             .Where(o => o.AnonId == anonId && !o.IsPaid)
+             .OrderByDescending(o => o.Id)
+             .SelectMany(o => o.OrderRows)
+             .Include(or => or.Meal)
+             .FirstOrDefault(or => or.Meal.Id == mealId);
 
 		if (orderRow != null && increment)
 			orderRow.Amount += 1;

@@ -31,12 +31,12 @@ namespace restaurant.Server.Controllers
 		}
 
 		[Authorize(Roles = IdentityRoles.Admin + "," + IdentityRoles.SuperAdmin)]
-		[HttpGet("GetOrderById/{OrderId}")]
-		public async Task<IActionResult> GetOrderByIdAsync([FromRoute] long OrderId)
+		[HttpGet("GetFullOrderByIdAsync/{orderId}")]
+		public async Task<IActionResult> GetFullOrderByIdAsync([FromRoute] long orderId)
 		{
 			try
 			{
-				var order = await _orderService.GetOrderByIdWithStatusHistory(OrderId);
+				var order = await _orderService.GetOrderByIdWithStatusHistory(orderId);
 				return Ok(order);
 			}
 			catch (Exception ex)

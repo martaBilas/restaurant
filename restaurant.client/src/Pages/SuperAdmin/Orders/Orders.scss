@@ -1,0 +1,27 @@
+@use "../../../variables.scss" as *;
+
+.view-wrapper-task-list {
+  display: flex;
+  flex-direction: column;
+
+  .dx-toolbar.toolbar-common {
+    padding: var(--content-padding);
+
+    .toolbar-header {
+      @include header();
+    }
+  }
+
+  .planning-grid {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    max-height: calc(100% - var(--toolbar-height) - var(--content-padding) * 2);
+  }
+
+  .planning-grid {
+    & > .dx-datagrid {
+      min-height: 100%;
+    }
+  }
+}

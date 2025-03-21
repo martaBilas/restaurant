@@ -19,13 +19,27 @@ namespace restaurant.Server.Controllers
             _orderService = orderService;
         }
 
-        [Authorize]
+        //[Authorize]
+        //[HttpGet("getOrders")]
+        //public IActionResult GetOrdersList([FromQuery] int skip, int take, bool requireTotalCount)
+        //{
+        //    try
+        //    {
+        //        var orders = _orderService.GetOrdersList(skip, take, requireTotalCount);
+        //        return Ok(orders);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+
         [HttpGet("getOrders")]
-        public IActionResult GetOrdersList([FromQuery] int skip, int take, bool requireTotalCount)
+        public IActionResult GetOrdersList()
         {
             try
             {
-                var orders = _orderService.GetOrdersList(skip, take, requireTotalCount);
+                var orders = _orderService.GetOrdersList();
                 return Ok(orders);
             }
             catch (Exception ex)
