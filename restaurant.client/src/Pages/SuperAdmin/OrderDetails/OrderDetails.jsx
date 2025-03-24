@@ -92,11 +92,11 @@ const OrderDetails = () => {
               </h6>
             </div>
             <div className="container mt-3">
-              {history.map((order, index) => (
+              {order.statusHistory.map((item, index) => (
                 <OrderStatusUpdateItem
                   key={index}
-                  changedTime={order.changedTime}
-                  status={order.status}
+                  changedTime={item.timeOfChange}
+                  status={item.statusName}
                 />
               ))}
             </div>

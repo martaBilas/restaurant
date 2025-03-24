@@ -13,7 +13,7 @@ const OrderStatusUpdateItem = ({ status, changedTime }) => {
         </sub>
       </label>
       <span className="ms-2">
-        Order changed status to <strong><OrderStatusItem status={status}/> </strong>
+        Order changed status to <OrderStatusItem text={status}/>
       </span>
     </div>
   );
