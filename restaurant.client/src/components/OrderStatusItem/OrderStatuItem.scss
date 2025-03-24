@@ -1,3 +1,30 @@
-.item-in-progress span{
- color:rgb(234, 156, 2);
+.item-new {
+  color: #3498db;
+}
+
+.item-confirmed {
+  color: #2ecc71;
+}
+
+.item-preparing {
+  color: #f39c12;
+}
+.item-out-for-delivery {
+  color: #9b59b6;
+}
+.item-delivered {
+  color: #27ae60;
+}
+.item-canceled-by-customer {
+  color: #e74c3c;
+}
+.item-canceled-by-restaurant {
+  color: #c0392b;
+}
+.item-returned {
+  color: #95a5a6;
+}
+
+.item-default {
+  color: #323232;
 }

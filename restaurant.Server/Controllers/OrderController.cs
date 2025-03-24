@@ -30,7 +30,7 @@ namespace restaurant.Server.Controllers
 			return Ok(model);
 		}
 
-		[Authorize(Roles = IdentityRoles.Admin + "," + IdentityRoles.SuperAdmin)]
+		//[Authorize(Roles = IdentityRoles.Admin + "," + IdentityRoles.SuperAdmin)]
 		[HttpGet("GetFullOrderByIdAsync/{orderId}")]
 		public async Task<IActionResult> GetFullOrderByIdAsync([FromRoute] long orderId)
 		{
@@ -130,5 +130,17 @@ namespace restaurant.Server.Controllers
 			_orderService.DeleteOrderRow(anonId.Value, mealId);
 			return Ok();
 		}
-	}
+
+        [HttpPut("UpdateOrderStatus")]
+        public async Task<IActionResult> UpdateOrderStatus([FromBody] UpdateOrderStatusModel request)
+		{ 
+
+            bool updated = await _orderService.UpdateOrderStatusAsync(request.OrderId, request.OrderStatusId, request.ChangedById);
+
+            if (!updated)
+                return NotFound("Order, status, or user not found.");
+
+            return Ok("Order status updated successfully.");
+        }
+    }
 }

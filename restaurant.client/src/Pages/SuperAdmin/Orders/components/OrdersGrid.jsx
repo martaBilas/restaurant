@@ -1,5 +1,4 @@
-import React, {useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 
 import {
   DataGrid,
@@ -14,35 +13,33 @@ import {
 } from "devextreme-react/data-grid";
 import SelectBox from "devextreme-react/select-box";
 import { OrderStatusItem } from "../../../../components/OrderStatusItem/OrderStatusItem";
-import {
-  editFieldRender,
-  statusItemRender,
-} from "../../../../utils/statusindicatorRenderMethos";
+import { editFieldRender, statusItemRender } from "../../../../utils/statusIndicatorRenderMethods";
 import { Link } from "react-router-dom";
+import { STATUS_ITEMS } from "../../../../const/order.status.items.const";
 
 import "./OrdersGrid.scss";
 
-let useNavigation = true;
 
-const STATUS_ITEMS = ["Open", "In Progress", "Deferred", "Completed"];
+const CellComponent = ({ data }) => {
+  return <OrderStatusItem text={data.value.name} />;
+};
 
-const CellComponent = ({ data }) => <OrderStatusItem text={data.text} />;
 
-const editStatusRender = ({ setValue, value }) => (
-  <SelectBox
-    className="edit-cell"
-    defaultValue={value}
-    items={STATUS_ITEMS}
-    fieldRender={editFieldRender}
-    itemRender={statusItemRender}
-    onValueChange={(value) => setValue(value)}
-  />
-);
+const statusEditorRender = (cell) => {
+  const onValueChanged = (e) => cell.setValue(e.value);
+  return (
+    <SelectBox
+      defaultValue={cell.value}
+      items={STATUS_ITEMS}
+      valueExpr="id" 
+      onValueChanged={onValueChanged}
+      fieldRender={editFieldRender}
+      itemRender={statusItemRender}
+    />
+  );
+};
 
 export const OrdersGrid = React.forwardRef(({ dataSource }, ref) => {
-  const toogleUseNavigation = useCallback(() => {
-    useNavigation = !useNavigation;
-  }, []);
 
   return (
     <DataGrid
@@ -54,9 +51,6 @@ export const OrdersGrid = React.forwardRef(({ dataSource }, ref) => {
       showBorders
       height="500"
       pageSize={10}
-      onEditingStart={toogleUseNavigation}
-      onEditCanceled={toogleUseNavigation}
-      onSaved={toogleUseNavigation}
     >
       <Scrolling
         mode="virtual"
@@ -77,9 +71,7 @@ export const OrdersGrid = React.forwardRef(({ dataSource }, ref) => {
         allowEditing={false}
         alignment="left"
         cellRender={({ data }) => (
-          <Link to={`/order-details/${data.id}`} >
-          {data.id}
-        </Link>
+          <Link to={`/order-details/${data.id}`}>{data.id}</Link>
         )}
       />
       <Column
@@ -90,7 +82,7 @@ export const OrdersGrid = React.forwardRef(({ dataSource }, ref) => {
         hidingPriority={1}
         allowEditing={false}
         alignment="left"
-        format="yyyy-MM-dd HH:mm:ss"
+        format="dd.MM.yyyy HH:mm:ss"
       />
       <Column
         caption="Customer"
@@ -125,11 +117,11 @@ export const OrdersGrid = React.forwardRef(({ dataSource }, ref) => {
         alignment="left"
       />
       <Column
-        dataField="status"
+        dataField="orderStatus"
         caption="Status"
         minWidth={120}
         cellComponent={CellComponent}
-        editCellRender={editStatusRender}
+        editCellRender={statusEditorRender}
         hidingPriority={3}
         alignment="left"
       >

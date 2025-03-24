@@ -11,6 +11,7 @@ public interface IOrderService
 	OrderListResponse GetOrdersList(int skip, int take, bool requireTotalCount);
 	bool PlaceOrder(Guid anonId, string name, string surname, string adress, string email, string phone, int paymentType, string additionalInfo);
 	public int UptadeAmount(Guid anonId, int mealId, bool increment);
-	Task<OrderWithStatusHistoryModel> GetOrderByIdWithStatusHistory(long orderId);
+	public Task<OrderWithStatusHistoryModel> GetOrderByIdWithStatusHistory(long orderId);
 	public List<OrderModel> GetOrdersList();
+    public Task<bool> UpdateOrderStatusAsync(long orderId, long orderStatusId, long changedById);
 }

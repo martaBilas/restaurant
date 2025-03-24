@@ -10,27 +10,37 @@ import "jspdf-autotable";
 import Button from "devextreme-react/button";
 import TextBox from "devextreme-react/text-box";
 import { OrdersGrid } from "./components/OrdersGrid";
-import DataSource from "devextreme/data/data_source";
+import CustomStore from "devextreme/data/custom_store";
 
 import "./Orders.scss";
 import { getOrdersList } from "../../../services/OrdersService";
+import { updateOrderStatus } from "../../../services/OrdersService";
+import { useAuth } from "../../../state/Auth/AuthContext";
 
 export const Orders = () => {
+  const { user } = useAuth();
   const gridRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
 
-  const dataSource = new DataSource({
-    load: async () => {
-      return await getOrdersList();
-    },
+  const orderStore = new CustomStore({
+    key: 'id',
+    load: async () => {return await getOrdersList();},
+    update: async (key, values) => {
+      try {
+        await updateOrderStatus(key, values.orderStatus, user.id);
+      } catch (error) {
+        console.error('Error updating order:', error);
+        throw error;
+      }
+    }
   });
 
   useEffect(() => {
-    if (dataSource) {
+    if (orderStore) {
       setLoading(false);
     }
-  }, [dataSource]);
+  }, [orderStore]);
 
   const exportToPDF = useCallback(() => {
     const doc = new jsPDF();
@@ -109,7 +119,7 @@ export const Orders = () => {
         </Item>
       </Toolbar>
       {loading && <LoadPanel visible />}
-      {!loading && <OrdersGrid dataSource={dataSource} ref={gridRef} />}
+      {!loading && <OrdersGrid dataSource={orderStore} ref={gridRef} />}
     </div>
   );
 };
