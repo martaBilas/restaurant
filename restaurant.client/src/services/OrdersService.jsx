@@ -34,7 +34,6 @@ export const getOrdersList = async () => {
 
 export const getFullOrderByIdAsync = async (orderId) => {
     try {
-        console.log("Fetching order with ID:", orderId);
         const response = await axios.get(`${BASE_URL}Order/GetFullOrderByIdAsync/${orderId}`, {
             withCredentials: true,
         });

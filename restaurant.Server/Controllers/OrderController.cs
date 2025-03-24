@@ -45,9 +45,9 @@ namespace restaurant.Server.Controllers
 			}
 		}
 
-		[Authorize(Roles = IdentityRoles.User)]
-		[HttpGet("{email}", Name = "GetUserOrders")]
-		public async Task<IActionResult> GetUserPaidOrders(string email)
+		//[Authorize(Roles = IdentityRoles.User)]
+		[HttpGet( "GetUserOrders")]
+		public async Task<IActionResult> GetUserPaidOrders([FromQuery] string email)
 		{
 			try
 			{

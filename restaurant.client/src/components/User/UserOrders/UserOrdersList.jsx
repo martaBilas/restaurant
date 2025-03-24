@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import UserOrder from "./UserOrder";
 import { getUserOrdersByEmail } from "../../../services/UserInfo";
 import { useAuth } from "../../../state/Auth/AuthContext";
+import { OrderStatusItem } from "../../OrderStatusItem/OrderStatusItem";
 
 const UserOrdersList = () => {
   const { user } = useAuth();
@@ -30,7 +31,12 @@ const UserOrdersList = () => {
         <Accordion className="pb-3">
           {orders.map((order) => (
             <Accordion.Item key={order.id} eventKey={order.id}>
-              <Accordion.Header>Order #{order.id}</Accordion.Header>
+              <Accordion.Header className="d-flex w-100">
+                <span>Order #{order.id}</span>
+                <div className="ms-auto text-end">
+                  <OrderStatusItem text={order.orderStatus.name} />
+                </div>
+              </Accordion.Header>
               <Accordion.Body>
                 <UserOrder order={order} />
               </Accordion.Body>

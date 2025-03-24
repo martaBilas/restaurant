@@ -6,7 +6,7 @@ const BASE_URL = "https://localhost:7135/api/";
 
 export const getUserOrdersByEmail = async (userEmail) => {
   try {
-    const response = await axios.get(`${BASE_URL}User/${userEmail}`, {
+    const response = await axios.get(`${BASE_URL}Order/GetUserOrders/?email=${userEmail}`, {
       withCredentials: true,
     });
     return response;
