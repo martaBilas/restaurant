@@ -1,3 +1,4 @@
+using Application.Options;
 using DataContext;
 using DataContext.Seeds;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,9 @@ builder.Services.AddCustomSwagger();
 // Add db connection
 builder.Services.AddCustomDbContext(builder.Configuration);
 
+// Add options
+builder.Services.Configure<StorageOption>(builder.Configuration.GetSection("StorageOption"));
+
 // Add identity
 builder.Services.AddCustomIdentity();
 
@@ -37,18 +41,18 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<RestaurantDataContext>();
-        await context.Database.MigrateAsync();
-        await IdentitySeeder.EnsureDataSeeded(services);
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred seeding the DB.");
-    }
+	var services = scope.ServiceProvider;
+	try
+	{
+		var context = services.GetRequiredService<RestaurantDataContext>();
+		await context.Database.MigrateAsync();
+		await IdentitySeeder.EnsureDataSeeded(services);
+	}
+	catch (Exception ex)
+	{
+		var logger = services.GetRequiredService<ILogger<Program>>();
+		logger.LogError(ex, "An error occurred seeding the DB.");
+	}
 }
 
 app.UseDefaultFiles();
@@ -57,15 +61,15 @@ app.UseStaticFiles();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseForwardedHeaders();
 app.UseCookiePolicy(new CookiePolicyOptions
 {
-    MinimumSameSitePolicy = SameSiteMode.None, // Set SameSite to None
-    Secure = CookieSecurePolicy.Always, // Set Secure to Always
+	MinimumSameSitePolicy = SameSiteMode.None, // Set SameSite to None
+	Secure = CookieSecurePolicy.Always, // Set Secure to Always
 });
 
 app.UseHttpsRedirection();

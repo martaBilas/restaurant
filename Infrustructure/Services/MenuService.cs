@@ -1,122 +1,132 @@
-﻿using DataContext;
+﻿using Application.Interfaces.Services;
+using DataContext;
 using Domain;
+using Domain.Enums;
 using Infrastructure.Interfaces;
 using Infrastructure.Models.Menu;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
 
 public class MenuService : IMenuService
 {
-    public readonly RestaurantDataContext _db;
-    public MenuService(RestaurantDataContext db)
-    { _db = db; }
+	public readonly RestaurantDataContext _db;
+	private readonly IFileStorageService _fileStorageService;
 
-    public IList<MealModel> GetMeals(int categoryId)
-    {
-        var meals = _db.Meals
-            .Include(m => m.Category)
-            .Where(m => m.Category.Id == categoryId)
-            .ToList();
+	public MenuService(RestaurantDataContext db,
+					   IFileStorageService fileStorageService)
+	{
+		_db = db;
+		_fileStorageService = fileStorageService;
+	}
 
-        var result = meals.Select(meal => new MealModel
-        {
-            Id = meal.Id,
-            Name = meal.Name,
-            CategoryId = meal.Category.Id,
-            Price = meal.Price,
-            Weight = meal.Weight,
-            ImageUrl = meal.ImageUrl,
-            Description = meal.Description
-        }).ToList();
+	public IList<MealModel> GetMeals(int categoryId)
+	{
+		var meals = _db.Meals
+			.Include(m => m.Category)
+			.Where(m => m.Category.Id == categoryId)
+			.ToList();
 
-        return result;
-    }
+		var result = meals.Select(meal => new MealModel
+		{
+			Id = meal.Id,
+			Name = meal.Name,
+			CategoryId = meal.Category.Id,
+			Price = meal.Price,
+			Weight = meal.Weight,
+			ImageUrl = meal.ImageUrl,
+			Description = meal.Description
+		}).ToList();
 
-    public MealModel GetMealById(int id)
-    {
-        var meal = _db.Meals
-            .Include(m => m.Category)
-            .FirstOrDefault(m => m.Id == id);
-        if (meal == null)
-        {
-            return new MealModel();
-        }
+		return result;
+	}
 
-        return new MealModel
-        {
-            Id = meal.Id,
-            Name = meal.Name,
-            CategoryId = meal.Category.Id,
-            Price = meal.Price,
-            Weight = meal.Weight,
-            ImageUrl = meal.ImageUrl,
-            Description = meal.Description
-        };
-    }
+	public MealModel GetMealById(int id)
+	{
+		var meal = _db.Meals
+			.Include(m => m.Category)
+			.FirstOrDefault(m => m.Id == id);
+		if (meal == null)
+		{
+			return new MealModel();
+		}
 
-    public IList<CategoryItemModel> GetCategories()
-    {
-        IList<CategoryItemModel> categories = _db.MealCategories
-                .Select(category => new CategoryItemModel
-                {
-                    Id = category.Id,
-                    Name = category.Name,
-                    ImageUrl = category.ImageUrl
-                })
-                .ToList();
+		return new MealModel
+		{
+			Id = meal.Id,
+			Name = meal.Name,
+			CategoryId = meal.Category.Id,
+			Price = meal.Price,
+			Weight = meal.Weight,
+			ImageUrl = meal.ImageUrl,
+			Description = meal.Description
+		};
+	}
+
+	public IList<CategoryItemModel> GetCategories()
+	{
+		IList<CategoryItemModel> categories = _db.MealCategories
+				.Select(category => new CategoryItemModel
+				{
+					Id = category.Id,
+					Name = category.Name,
+					ImageUrl = category.ImageUrl
+				})
+				.ToList();
 
 
-        return categories;
-    }
+		return categories;
+	}
 
-    public void AddMealToMenu(string name, int categoryId, double price, double? weight, string imageUrl, string description)
-    {
-        var category = _db.MealCategories.Where(c => c.Id == categoryId).FirstOrDefault();
-        if (category == null)
-        {
-            throw new Exception("there is no such category");
-        }
+	public async Task AddMealToMenu(string name, int categoryId, double price, double? weight, IFormFile image, string description)
+	{
+		var category = _db.MealCategories.Where(c => c.Id == categoryId).FirstOrDefault();
+		if (category == null)
+		{
+			throw new Exception("there is no such category");
+		}
 
-        var newMeal = new Meal
-        {
-            Name = name,
-            Category = category,
-            Price = price,
-            Weight = weight,
-            ImageUrl = imageUrl,
-            Description = description
-        };
+		var newMeal = new Meal
+		{
+			Name = name,
+			Category = category,
+			Price = price,
+			Weight = weight,
+			ImageUrl = await _fileStorageService.UploadFileAsync(image, FileSpecification.MealImg),
+			Description = description
+		};
 
-        _db.Meals.Add(newMeal);
+		await _db.Meals.AddAsync(newMeal);
+		await _db.SaveChangesAsync();
+	}
 
-    }
+	public void DeleteMealFromMenu(int id)
+	{
+		var meal = _db.Meals.FirstOrDefault(c => c.Id == id);
+		if (meal == null)
+		{
+			throw new Exception("there is no such meal");
+		}
 
-    public void DeleteMealFromMenu(int id)
-    {
-        var meal = _db.Meals.FirstOrDefault(c => c.Id == id);
-        if (meal == null)
-        {
-            throw new Exception("there is no such meal");
-        }
+		_db.Meals.Remove(meal);
+		_db.SaveChanges();
+	}
 
-        _db.Meals.Remove(meal);
-    }
+	public async Task UpdateMeal(long id, string name, int categoryId, double price, double? weight, IFormFile image, string? description)
+	{
+		var meal = _db.Meals.FirstOrDefault(c => c.Id == id);
 
-    public void UpdateMeal(long id, string name, int categoryId, double price, double? weight, string? imageUrl, string? description) 
-    { 
-        var meal = _db.Meals.FirstOrDefault(c => c.Id == id);
+		if (meal == null)
+			throw new Exception("there is no such meal");
 
-        if (meal == null)
-        {
-            throw new Exception("there is no such meal");
-        }
-        meal.Weight = weight;
-        meal.ImageUrl = imageUrl;
-        meal.Description = description;
-        meal.Name = name;
+		_fileStorageService.DeleteFile(meal.ImageUrl!);
 
-        _db.SaveChanges();
-    }
+		meal.Weight = weight;
+		meal.ImageUrl = await _fileStorageService.UploadFileAsync(image, FileSpecification.MealImg);
+		meal.Description = description;
+		meal.Name = name;
 
+		_db.SaveChanges();
+	}
 }
