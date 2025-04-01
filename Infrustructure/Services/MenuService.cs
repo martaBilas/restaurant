@@ -113,19 +113,31 @@ public class MenuService : IMenuService
 		_db.SaveChanges();
 	}
 
-	public async Task UpdateMeal(long id, string name, int categoryId, double price, double? weight, IFormFile image, string? description)
+	public async Task UpdateMeal(long id, string name, int categoryId, double price, double weight, IFormFile image, string? description)
 	{
 		var meal = _db.Meals.FirstOrDefault(c => c.Id == id);
 
 		if (meal == null)
 			throw new Exception("there is no such meal");
 
-		_fileStorageService.DeleteFile(meal.ImageUrl!);
+		meal.Name = name ?? meal.Name;
 
-		meal.Weight = weight;
-		meal.ImageUrl = await _fileStorageService.UploadFileAsync(image, FileSpecification.MealImg);
-		meal.Description = description;
-		meal.Name = name;
+		if (categoryId != -1)
+		{
+			var category = _db.MealCategories.FirstOrDefault(c => c.Id == categoryId);
+			if (category == null)
+				throw new Exception("there is no such meal category");
+			meal.Category = category;
+		}
+
+		meal.Price = price == -1 ? meal.Price : price;
+		meal.Weight = weight == -1 ? meal.Weight : weight;
+		if (image != null)
+		{
+			_fileStorageService.DeleteFile(meal.ImageUrl!);
+			meal.ImageUrl = await _fileStorageService.UploadFileAsync(image, FileSpecification.MealImg);
+		}
+		meal.Description = description ?? meal.Description;
 
 		_db.SaveChanges();
 	}

@@ -68,7 +68,7 @@ namespace restaurant.Server.Controllers
 		{
 			try
 			{
-				await _menuService.UpdateMeal(newMeal.Id, newMeal.Name, newMeal.CategoryId, newMeal.Price, newMeal.Weight, newMeal.Image, newMeal.Description);
+				await _menuService.UpdateMeal(newMeal.Id, newMeal.Name, newMeal.CategoryId ?? -1, newMeal.Price ?? -1, newMeal.Weight ?? -1, newMeal.Image, newMeal.Description);
 				return Ok();
 			}
 			catch (Exception ex)

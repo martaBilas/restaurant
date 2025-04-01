@@ -10,5 +10,5 @@ public interface IMenuService
 	IList<CategoryItemModel> GetCategories();
 	MealModel GetMealById(int id);
 	IList<MealModel> GetMeals(int categoryId);
-	Task UpdateMeal(long id, string name, int categoryId, double price, double? weight, IFormFile image, string? description);
+	Task UpdateMeal(long id, string name, int categoryId, double price, double weight, IFormFile image, string? description);
 }
