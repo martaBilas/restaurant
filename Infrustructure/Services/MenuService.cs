@@ -137,10 +137,8 @@ public class MenuService : IMenuService
 		meal.Price = price == -1 ? meal.Price : price;
 		meal.Weight = weight == -1 ? meal.Weight : weight;
 		if (image != null)
-		{
-			_fileStorageService.DeleteFile(meal.ImageUrl!);
-			meal.ImageUrl = await _fileStorageService.UploadFileAsync(image, FileSpecification.MealImg);
-		}
+			await _fileStorageService.ChangeFile(image, meal.ImageUrl, FileSpecification.MealImg);
+
 		meal.Description = description ?? meal.Description;
 
 		_db.SaveChanges();

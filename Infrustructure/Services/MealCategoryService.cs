@@ -20,7 +20,7 @@ public class MealCategoryService : IMealCategoryService
 		_fileStorageService = fileStorageService;
 	}
 
-	public async Task AddMealToMenu(string name, IFormFile image)
+	public async Task AddMealCategory(string name, IFormFile image)
 	{
 		if (await _db.MealCategories.AnyAsync(c => c.Name == name))
 			throw new Exception("there already exist category with same name");
@@ -30,6 +30,22 @@ public class MealCategoryService : IMealCategoryService
 			Name = name,
 			ImageUrl = await _fileStorageService.UploadFileAsync(image, FileSpecification.CategoryImg)
 		});
+		await _db.SaveChangesAsync();
+	}
+
+	public async Task UpdateMealCategory(long id, string name, IFormFile image)
+	{
+		var category = await _db.MealCategories.FirstOrDefaultAsync(c => c.Id == id);
+		if (category == null)
+			throw new Exception("there is no such category");
+
+		if (name != null && await _db.MealCategories.AnyAsync(c => c.Name == name))
+			throw new Exception("there already exist category with same name");
+
+		category.Name = name ?? category.Name;
+		if (image != null)
+			await _fileStorageService.ChangeFile(image, category.ImageUrl, FileSpecification.CategoryImg);
+
 		await _db.SaveChangesAsync();
 	}
 }

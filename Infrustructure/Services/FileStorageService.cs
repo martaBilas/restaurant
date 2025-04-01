@@ -42,7 +42,7 @@ public class FileStorageService : IFileStorageService
 
 	private async Task<bool> ChangeFileAsync(IFormFile File, string fileName, string storagePath)
 	{
-		var filePath = storagePath + fileName;
+		var filePath = fileName;
 
 #if DEBUG || TEST
 		if (!Directory.Exists(storagePath))

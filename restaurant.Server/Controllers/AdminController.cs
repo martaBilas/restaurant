@@ -74,7 +74,7 @@ namespace restaurant.Server.Controllers
 		{
 			try
 			{
-				await _mealCategoryService.AddMealToMenu(newMealCategory.Name, newMealCategory.Image);
+				await _mealCategoryService.AddMealCategory(newMealCategory.Name, newMealCategory.Image);
 				return Ok();
 			}
 			catch (Exception ex)
@@ -90,6 +90,21 @@ namespace restaurant.Server.Controllers
 			try
 			{
 				await _menuService.UpdateMeal(newMeal.Id, newMeal.Name, newMeal.CategoryId ?? -1, newMeal.Price ?? -1, newMeal.Weight ?? -1, newMeal.Image, newMeal.Description);
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
+		[HttpPut("updateMealCategory")]
+		[Authorize(Roles = IdentityRoles.SuperAdmin)]
+		public async Task<IActionResult> UpdateMealCategory([FromForm] UpdateMealCategoryCommand newMeal)
+		{
+			try
+			{
+				await _mealCategoryService.UpdateMealCategory(newMeal.Id, newMeal.Name, newMeal.Image);
 				return Ok();
 			}
 			catch (Exception ex)
