@@ -83,9 +83,10 @@ public class MenuService : IMenuService
 	{
 		var category = _db.MealCategories.Where(c => c.Id == categoryId).FirstOrDefault();
 		if (category == null)
-		{
 			throw new Exception("there is no such category");
-		}
+
+		if (await _db.Meals.AnyAsync(m => m.Name == name))
+			throw new Exception("there already exist meal with same name");
 
 		var newMeal = new Meal
 		{
@@ -119,6 +120,9 @@ public class MenuService : IMenuService
 
 		if (meal == null)
 			throw new Exception("there is no such meal");
+
+		if (name != null && await _db.Meals.AnyAsync(m => m.Name == name))
+			throw new Exception("there already exist meal with same name");
 
 		meal.Name = name ?? meal.Name;
 

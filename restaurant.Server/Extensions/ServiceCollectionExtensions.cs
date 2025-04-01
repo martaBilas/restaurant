@@ -132,6 +132,7 @@ namespace restaurant.Server.Extensions
 			services.AddScoped<IOrderService, OrderService>();
 			services.AddScoped<IAnonCustomerService, AnonCustomerService>();
 			services.AddScoped<IUserService, UserService>();
+			services.AddScoped<IMealCategoryService, MealCategoryService>();
 			return services;
 		}
 	}

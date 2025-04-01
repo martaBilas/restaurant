@@ -1,4 +1,5 @@
 ﻿using Application.Commands.Meal;
+using Application.Commands.MealCategory;
 using Application.Configurations;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -12,11 +13,15 @@ namespace restaurant.Server.Controllers
 	{
 		public readonly IOrderService _orderService;
 		public readonly IMenuService _menuService;
+		public readonly IMealCategoryService _mealCategoryService;
 
-		public AdminController(IMenuService menuService, IOrderService orderService)
+		public AdminController(IMenuService menuService,
+							   IOrderService orderService,
+							   IMealCategoryService mealCategoryService)
 		{
 			_menuService = menuService;
 			_orderService = orderService;
+			_mealCategoryService = mealCategoryService;
 		}
 
 		//[Authorize]
@@ -63,7 +68,23 @@ namespace restaurant.Server.Controllers
 			}
 		}
 
+		[HttpPost("addMealCategory")]
+		[Authorize(Roles = IdentityRoles.SuperAdmin)]
+		public async Task<IActionResult> AddMealCategory([FromForm] AddMealCategoryCommand newMealCategory)
+		{
+			try
+			{
+				await _mealCategoryService.AddMealToMenu(newMealCategory.Name, newMealCategory.Image);
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
+
 		[HttpPut("updateMeal")]
+		[Authorize(Roles = IdentityRoles.SuperAdmin)]
 		public async Task<IActionResult> UpdateMeal([FromForm] UpdateMealCommand newMeal)
 		{
 			try
@@ -78,6 +99,7 @@ namespace restaurant.Server.Controllers
 		}
 
 		[HttpDelete("deleteMealToMenu")]
+		[Authorize(Roles = IdentityRoles.SuperAdmin)]
 		public IActionResult DeleteMeal([FromBody] int mealId)
 		{
 			try
