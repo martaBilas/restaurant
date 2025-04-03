@@ -39,7 +39,7 @@ public class MealCategoryService : IMealCategoryService
 		if (category == null)
 			throw new Exception("there is no such category");
 
-		if (name != null && await _db.MealCategories.AnyAsync(c => c.Name == name))
+		if (name != null && name != category.Name && await _db.MealCategories.AnyAsync(c => c.Name == name))
 			throw new Exception("there already exist category with same name");
 
 		category.Name = name ?? category.Name;
