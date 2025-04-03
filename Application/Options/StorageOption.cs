@@ -2,7 +2,8 @@
 
 public class StorageOption
 {
-	public string MealImgPath { get; set; }
-	public string CategoryImgPath { get; set; }
+    public string FullPath { get; set; }
+    public string MealImgPath { get; set; }
+    public string CategoryImgPath { get; set; }
 
 }
