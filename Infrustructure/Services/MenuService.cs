@@ -110,6 +110,7 @@ public class MenuService : IMenuService
             throw new Exception("there is no such meal");
         }
 
+        _fileStorageService.DeleteFile(meal.ImageUrl);
         _db.Meals.Remove(meal);
         _db.SaveChanges();
     }
