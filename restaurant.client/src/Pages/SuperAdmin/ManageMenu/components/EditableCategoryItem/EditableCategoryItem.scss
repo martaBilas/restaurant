@@ -1,0 +1,27 @@
+.category_item {
+  background: #faf7f7;
+  padding: 8px 2px;
+  border-radius: 8px;
+  border-color: #faf7f7;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.category_img img {
+  width: 55px;
+  height: 55px;
+}
+
+@media (max-width: 640.98px) and (orientation: portrait) {
+  .category_item {
+    padding: 2px 2px;
+  }
+  .category_img img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .category_item h5 {
+    font-size: 0.8rem;
+  }
+}

@@ -4,7 +4,7 @@ namespace Infrastructure.Interfaces;
 
 public interface IMealCategoryService
 {
-    Task AddMealCategory(string name, IFormFile image);
-    Task UpdateMealCategory(long id, string name, IFormFile image);
-    Task DeleteMealCategory(long id);
+    public Task AddMealCategory(string name, IFormFile image);
+    public Task UpdateMealCategory(long id, string name, IFormFile image);
+    public Task DeleteMealCategory(long id);
 }

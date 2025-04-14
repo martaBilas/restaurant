@@ -1,7 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom'
-import Home from '../Pages/Home.jsx';
+import ManageMenu from '../Pages/SuperAdmin/ManageMenu/ManageMenu.jsx';
 import { Orders } from '../Pages/SuperAdmin/Orders/Orders.jsx';
 import OrderDetails from '../Pages/SuperAdmin/OrderDetails/OrderDetails.jsx';
+import MealWizard from '../Pages/SuperAdmin/MealWizard/MealWizard.jsx';
+import CategoryWizard from '../Pages/SuperAdmin/CategoryWizard/CategoryWizard.jsx';
 import { SuperAdminLayout } from '../Layout/SuperAdminLayout/SuperAdminLayout.jsx';
 
 export const SuperAdminRouter = createBrowserRouter([
@@ -11,7 +13,7 @@ export const SuperAdminRouter = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home />,
+        element: <ManageMenu />,
       },
       {
         path:'/orders',
@@ -20,6 +22,22 @@ export const SuperAdminRouter = createBrowserRouter([
       {
         path: '/order-details/:orderId',
         element: <OrderDetails/>
+      },
+      {
+        path: '/meal/:id',
+        element: <MealWizard/>
+      },
+      {
+        path: '/meal/new',
+        element: <MealWizard/>
+      },
+      {
+        path: '/category/:id',
+        element: <CategoryWizard/>
+      },
+      {
+        path: '/category/new',
+        element: <CategoryWizard/>
       }
     ],
   },

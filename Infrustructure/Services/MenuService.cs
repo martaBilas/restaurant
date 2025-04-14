@@ -64,26 +64,40 @@ public class MenuService : IMenuService
         };
     }
 
-    public IList<CategoryItemModel> GetCategories()
+	public IList<CategoryItemModel> GetCategories()
+	{
+		IList<CategoryItemModel> categories = _db.MealCategories
+				.Select(category => new CategoryItemModel
+				{
+					Id = category.Id,
+					Name = category.Name,
+					ImageUrl = category.ImageUrl
+				})
+				.ToList();
+
+
+		return categories;
+	}
+    public CategoryItemModel GetCategoryById(int id)
     {
-        IList<CategoryItemModel> categories = _db.MealCategories
-                .Select(category => new CategoryItemModel
-                {
-                    Id = category.Id,
-                    Name = category.Name,
-                    ImageUrl = category.ImageUrl
-                })
-                .ToList();
+        var category = _db.MealCategories
+                          .Where(c => c.Id == id)
+                          .Select(category => new CategoryItemModel
+                          {
+                              Id = category.Id,
+                              Name = category.Name,
+                              ImageUrl = category.ImageUrl
+                          })
+                          .FirstOrDefault();
 
-
-        return categories;
+        return category;
     }
 
     public async Task AddMealToMenu(string name, int categoryId, double price, double? weight, IFormFile image, string description)
-    {
-        var category = _db.MealCategories.Where(c => c.Id == categoryId).FirstOrDefault();
-        if (category == null)
-            throw new Exception("there is no such category");
+	{
+		var category = _db.MealCategories.Where(c => c.Id == categoryId).FirstOrDefault();
+		if (category == null)
+			throw new Exception("there is no such category");
 
         if (await _db.Meals.AnyAsync(m => m.Name == name))
             throw new Exception("there already exist meal with same name");
@@ -122,10 +136,7 @@ public class MenuService : IMenuService
         if (meal == null)
             throw new Exception("there is no such meal");
 
-        if (name != null && name != meal.Name && await _db.Meals.AnyAsync(m => m.Name == name))
-            throw new Exception("there already exist meal with same name");
-
-        meal.Name = name ?? meal.Name;
+		meal.Name = name ?? meal.Name;
 
         if (categoryId != -1)
         {

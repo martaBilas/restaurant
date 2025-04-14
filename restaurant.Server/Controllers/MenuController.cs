@@ -27,15 +27,34 @@ public class MenuController : ControllerBase
         return Ok(categories);
     }
 
+    [HttpGet("getCategoryById/{id}")]
+    public IActionResult GetCategoryById([FromRoute] int id)
+    {
+        var meal = _menuService.GetCategoryById(id);
+        if (meal == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(meal);
+    }
+
     [HttpGet("GetMeals")]
     public IActionResult GetMeals(int categoryId)
     {
         return Ok(_menuService.GetMeals(categoryId));
     }
 
-    [HttpGet("getMealById")]
-    public IActionResult GetMealById(int id)
+    [HttpGet("getMealById/{id}")]
+    public IActionResult GetMealById([FromRoute] int id)
     {
-        return Ok(_menuService.GetMealById(id));
+        var meal = _menuService.GetMealById(id);
+        if (meal == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(meal);
     }
+
 }

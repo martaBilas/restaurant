@@ -25,7 +25,7 @@ namespace restaurant.Server.Controllers
         }
 
         //[Authorize]
-        //[HttpGet("getOrders")]
+        //[HttpGet("getOrdersList")]
         //public IActionResult GetOrdersList([FromQuery] int skip, int take, bool requireTotalCount)
         //{
         //    try
@@ -54,19 +54,19 @@ namespace restaurant.Server.Controllers
         }
 
         [Authorize(Roles = IdentityRoles.SuperAdmin)]
-        [HttpPost("addMealToMenu")]
-        public async Task<IActionResult> AddMeal([FromForm] AddMealCommand newMeal)
-        {
-            try
-            {
-                await _menuService.AddMealToMenu(newMeal.Name, newMeal.CategoryId, newMeal.Price, newMeal.Weight, newMeal.Image, newMeal.Description);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+		[HttpPost("addMealToMenu")]
+		public async Task<IActionResult> AddMeal([FromForm] AddMealCommand newMeal)
+		{
+			try
+			{
+				await _menuService.AddMealToMenu(newMeal.Name, newMeal.CategoryId, newMeal.Price, newMeal.Weight, newMeal.Image, newMeal.Description);
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 
         [HttpPost("addMealCategory")]
         [Authorize(Roles = IdentityRoles.SuperAdmin)]
@@ -83,20 +83,20 @@ namespace restaurant.Server.Controllers
             }
         }
 
-        [HttpPut("updateMeal")]
+		[HttpPut("updateMeal")]
         [Authorize(Roles = IdentityRoles.SuperAdmin)]
-        public async Task<IActionResult> UpdateMeal([FromForm] UpdateMealCommand newMeal)
-        {
-            try
-            {
-                await _menuService.UpdateMeal(newMeal.Id, newMeal.Name, newMeal.CategoryId ?? -1, newMeal.Price ?? -1, newMeal.Weight ?? -1, newMeal.Image, newMeal.Description);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+		public async Task<IActionResult> UpdateMeal([FromForm] UpdateMealCommand newMeal)
+		{
+			try
+			{
+				await _menuService.UpdateMeal(newMeal.Id, newMeal.Name, newMeal.CategoryId ?? -1, newMeal.Price ?? -1, newMeal.Weight ?? -1, newMeal.Image, newMeal.Description);
+				return Ok();
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(ex.Message);
+			}
+		}
 
         [HttpPut("updateMealCategory")]
         [Authorize(Roles = IdentityRoles.SuperAdmin)]
@@ -113,13 +113,15 @@ namespace restaurant.Server.Controllers
             }
         }
 
-        [HttpDelete("deleteMealToMenu")]
+
+
+        [HttpDelete("deleteMealFromMenu/{id}")]
         [Authorize(Roles = IdentityRoles.SuperAdmin)]
-        public IActionResult DeleteMeal([FromBody] int mealId)
+        public IActionResult DeleteMeal(int id)
         {
             try
             {
-                _menuService.DeleteMealFromMenu(mealId);
+                _menuService.DeleteMealFromMenu(id);
                 return Ok();
             }
             catch (Exception ex)
