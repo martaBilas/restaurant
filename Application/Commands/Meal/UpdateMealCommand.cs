@@ -11,4 +11,5 @@ public class UpdateMealCommand
 	public double? Weight { get; set; } = -1;
 	public IFormFile? Image { get; set; } = null;
 	public string? Description { get; set; } = null;
+	public bool IsActive { get; set; }
 }

@@ -10,4 +10,5 @@ public class AddMealCommand
 	public double Weight { get; set; }
 	public IFormFile Image { get; set; }
 	public string? Description { get; set; }
+	public bool IsActive { get; set; }	
 }
