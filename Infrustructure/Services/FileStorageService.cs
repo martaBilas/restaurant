@@ -44,10 +44,8 @@ public class FileStorageService : IFileStorageService
     {
         var filePath = _storageOptions.FullPath + fileName;
 
-#if DEBUG || TEST
-        if (!Directory.Exists(storagePath))
-            Directory.CreateDirectory(storagePath);
-#endif
+        if (!Directory.Exists(_storageOptions.FullPath + storagePath))
+            Directory.CreateDirectory(_storageOptions.FullPath + storagePath);
 
         try
         {
@@ -86,11 +84,12 @@ public class FileStorageService : IFileStorageService
         return filePath;
     }
 
-    public bool DeleteFile(string deleteFilePath)
+    public bool DeleteFile(string fileName)
     {
-        if (File.Exists(deleteFilePath))
+        var filePath = _storageOptions.FullPath + fileName;
+        if (File.Exists(filePath))
         {
-            File.Delete(deleteFilePath);
+            File.Delete(filePath);
             return true;
         }
         return false;
