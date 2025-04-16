@@ -28,11 +28,11 @@ export const SuperAdminHeaderNavLinks = () => {
           <NavLink to="/">Menu</NavLink>
         </li>
         <li>
-          <NavLink to="/contactInfo">Info</NavLink>
+          <NavLink to="/analytics">Analytics</NavLink>
         </li>
-        <li>
+        {/* <li>
           <NavLink to="/administrators">Admins</NavLink>
-        </li>
+        </li> */}
         <li>
           <NavLink to="/orders">Orders</NavLink>
         </li>

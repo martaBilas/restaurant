@@ -5,6 +5,7 @@ import OrderDetails from '../Pages/SuperAdmin/OrderDetails/OrderDetails.jsx';
 import MealWizard from '../Pages/SuperAdmin/MealWizard/MealWizard.jsx';
 import CategoryWizard from '../Pages/SuperAdmin/CategoryWizard/CategoryWizard.jsx';
 import { SuperAdminLayout } from '../Layout/SuperAdminLayout/SuperAdminLayout.jsx';
+import { AnalyticsDashboard } from '../Pages/SuperAdmin/AnalyticsDashboard/AnalyticsDashboard.jsx';
 
 export const SuperAdminRouter = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ export const SuperAdminRouter = createBrowserRouter([
       {
         path: '/category/new',
         element: <CategoryWizard/>
+      },
+      {
+        path: '/analytics',
+        element: <AnalyticsDashboard/>
       }
     ],
   },

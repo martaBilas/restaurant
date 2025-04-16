@@ -1,0 +1,65 @@
+.ticker {
+    --gap-padding: 12px;
+  
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .06), 0 2px 2px 0 rgba(0, 0, 0, .06);
+    background-color: #fff;
+    border: none;
+    padding: 16px;
+    display: flex;
+    gap: var(--gap-padding);
+    align-items: center;
+
+  
+    .icon-wrapper {
+      display: flex;
+      flex: 0 0 48px;
+      height: 48px;
+      border-radius: 50%;
+  
+      .dx-icon {
+        margin: auto;
+        font-size: 30px;
+      }
+  
+      &--positive {
+        background-color: color-mix(in sRGB, #8bc34a 12%, transparent);
+        color: #8bc34a;
+      }
+  
+      &--warning {
+        background-color: color-mix(in sRGB,#ffc107 12%, transparent);
+        color: #ffc107;
+      }
+  
+      &--info {
+        background-color: color-mix(in sRGB, #03a9f4 12%, transparent);
+        color: #03a9f4;
+      }
+  
+      &--negative {
+        background-color: color-mix(in sRGB, #f44336 12%, transparent);
+        color: #f44336;
+      }
+    }
+  
+    .middle {
+      flex: 1;
+    }
+  
+    .title {
+      font-size: 14px;
+      line-height: 20px;
+      margin-bottom: 8px;
+    }
+  
+    .total {
+      display: inline-block;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 20px;
+      color: var(--base-text-color);
+    }
+  }
+  
