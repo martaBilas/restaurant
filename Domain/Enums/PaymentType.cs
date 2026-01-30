@@ -3,5 +3,6 @@
 public enum PaymentType
 {
     Cash,
-    CreditCard
+    CreditCard,
+    Cryptocurrency
 }
